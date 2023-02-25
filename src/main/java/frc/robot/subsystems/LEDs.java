@@ -19,11 +19,12 @@ public class LEDs extends SubsystemBase {
   public static int[] blue = {0, 0, 255};
   public static int[] gold = {50, 20, 0};
   public static int[] pink = {255, 0, 70};
-  public static int[] purple = {119, 0, 200};
-  public static int[] yellow = {251, 177, 23};
+  public static int[] purple = {180, 0, 255};
+  public static int[] yellow = {255, 255, 0};
 
 
   double m_rainbowFirstPixelHue = 0;
+  double m_rainbowFirstPixelHue2 = 180;
 
   /** Creates a new LEDs. */
   public LEDs() {
@@ -51,7 +52,14 @@ public class LEDs extends SubsystemBase {
 
     for (var i = 0; i < m_ledBuffer.getLength(); i++){
       //Sets each LED to the same color
-      m_ledBuffer.setRGB(i, color[0], color[1], color[2]);
+
+      if (i %2 == 0){
+        m_ledBuffer.setRGB(i, (int)(color[0]*.1), (int)(color[1]*.1), (int)(color[2]*.1));
+        //m_ledBuffer.setRGB(i, 0, 0, 0);
+      } else {
+        m_ledBuffer.setRGB(i, color[0], color[1], color[2]);
+      }
+      
     }
     //updates every LED to their set color
     m_led.setData(m_ledBuffer);
@@ -76,6 +84,45 @@ public class LEDs extends SubsystemBase {
     m_rainbowFirstPixelHue += 1;
 
     m_rainbowFirstPixelHue %= 180;
+  }
+
+  public void rainbowReverse(){
+    for (var i = 0; i < m_ledBuffer.getLength(); i++){
+      final int hue = ((int)(m_rainbowFirstPixelHue) + (i * 180 / m_ledBuffer.getLength())) % 180;
+      final int hue2 = ((int)(m_rainbowFirstPixelHue2) - (i * 180 / m_ledBuffer.getLength())) % 180;
+
+      if (i > m_ledBuffer.getLength()/2){
+        m_ledBuffer.setHSV((m_ledBuffer.getLength() - i), hue, 255, 64);
+      } else {
+        m_ledBuffer.setHSV(i, hue, 255, 64);
+      }
+    }
+    // makes the rainbow move
+    m_rainbowFirstPixelHue += 1;
+    m_rainbowFirstPixelHue2 -=1;
+
+    m_rainbowFirstPixelHue2 %= 180;
+    m_rainbowFirstPixelHue %= 180;
+  }
+
+
+  public void dimRainbow(){
+    for (var i = 0; i < m_ledBuffer.getLength(); i++){
+      final int hue = ((int)(m_rainbowFirstPixelHue) + (i * 180 / m_ledBuffer.getLength())) % 180;
+      if (i %2 == 0){
+        
+        m_ledBuffer.setHSV(i, hue, 255, 40);
+      } else {
+        m_ledBuffer.setHSV(i, hue, 255, 255);
+      }
+
+      m_rainbowFirstPixelHue += 0.05;
+
+      m_rainbowFirstPixelHue %= 180;
+
+    }
+
+    m_led.setData(m_ledBuffer);
   }
 
   @Override

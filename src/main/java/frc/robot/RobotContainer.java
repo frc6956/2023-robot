@@ -13,13 +13,14 @@ import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Rotation;
 import frc.robot.subsystems.Vision;
 
-import java.sql.Driver;
+//import java.sql.Driver;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -66,14 +67,16 @@ public class RobotContainer {
   */
   
   //Claw commands
-  private final Command clawOpen = new RunCommand(
+  private final Command clawOpen = new InstantCommand(
     () -> claw.openClaw(), claw);
-  private final Command clawClose = new RunCommand(
+  private final Command clawClose = new InstantCommand(
     () -> claw.closeClaw(), claw);
+  private final Command clawUse = new InstantCommand(
+    () -> claw.openCloseClaw(), claw);
 
   //extension commands
   private final Command armExtend = new RunCommand(
-    () -> extension.extendArm(operatorStick.getY()), extension);
+    () -> extension.extendArm(-operatorStick.getY()), extension);
   private final Command armStop = new RunCommand(
     () -> extension.stopArm(), extension);
   private final Command armReset = new RunCommand(
@@ -86,8 +89,10 @@ public class RobotContainer {
   
 
   //rotation commands
-  private final Command rotateArm = new RunCommand(
-    () -> rotation.rotate(operatorStick.getY()), rotation);
+  private final Command rotateUp = new RunCommand(
+    () -> rotation.rotate(Constants.rotationSpeed), rotation);
+  private final Command rotateDown = new RunCommand(
+    () -> rotation.rotate(-Constants.rotationSpeed), rotation);
   private final Command stopArmRotation = new RunCommand(
     () -> rotation.stopRotate(), rotation);
   private final Command armRotateReset = new RunCommand(
@@ -101,6 +106,8 @@ public class RobotContainer {
     private final Command rotateArmHigh = new RotateArmHigh(rotation);
     private final Command rotateArmMiddle = new RotateArmMiddle(rotation);
     private final Command rotateArmLow = new RotateArmLow(rotation);
+
+  
 
   // LED commands
 
@@ -119,25 +126,35 @@ public class RobotContainer {
 
 
   //Scoring Commands
-  private final Command raiseHighCone = new ParallelCommandGroup(rotateArmHigh, extendArmHigh);
-  private final Command scoreHighCone = new SequentialCommandGroup(raiseHighCone, clawOpen);
+  
+  
+  
+  private final Command raiseHighCone = new RotateArmHigh(rotation).alongWith(new ExtendArmHigh(extension));
+  private final Command scoreHighCone = new RotateArmHigh(rotation).alongWith(new ExtendArmHigh(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 
-  private final Command raiseMiddleCone = new ParallelCommandGroup(rotateArmMiddle, extendArmMiddle);
-  private final Command scoreMiddleCone = new SequentialCommandGroup(raiseMiddleCone, clawOpen);
+  //private final Command raiseMiddleCone = rotateArmMiddle.alongWith(extendArmMiddle);
+  private final Command raiseMiddleCone = new RotateArmMiddle(rotation).alongWith(new ExtendArmMiddle(extension));
+  //private final Command scoreMiddleCone = raiseMiddleCone.andThen(clawOpen);
+  private final Command scoreMiddleCone = new RotateArmMiddle(rotation).alongWith(new ExtendArmMiddle(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 
-  private final Command raiseLowCone = new ParallelCommandGroup(rotateArmLow, extendArmLow);
-  private final Command scoreLowCone = new SequentialCommandGroup(raiseLowCone, clawOpen);
+  //private final Command raiseLowCone = rotateArmLow.alongWith(extendArmLow);
+  private final Command raiseLowCone = new RotateArmLow(rotation).alongWith(new ExtendArmLow(extension));
+  //private final Command scoreLowCone = raiseLowCone.andThen(clawOpen);
+  private final Command scoreLowCone = new RotateArmLow(rotation).alongWith(new ExtendArmLow(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 
+  /* 
   //Human player pickup
-  private final Command raiseToHPS = new ParallelCommandGroup(rotateArmSuperHigh, extendArmSuperHigh);
-  private final Command getFromHPS = new SequentialCommandGroup(clawOpen, raiseToHPS, clawClose);
+  private final Command raiseToHPS = rotateArmSuperHigh.alongWith(extendArmSuperHigh);
+  private final Command getFromHPS = clawOpen.andThen(raiseToHPS).andThen(clawClose);
 
 //Ground Pick Up
-  private final Command lowerToGround = new ParallelCommandGroup(rotateArmLow, extendArmLow);
-  private final Command getFromGround = new SequentialCommandGroup(clawOpen, lowerToGround, clawClose);
+  private final Command lowerToGround = rotateArmLow.alongWith(extendArmLow);
+  private final Command getFromGround = clawOpen.andThen(lowerToGround).andThen(clawClose);
 
   //set Return
-  private final Command clawArmReset = new SequentialCommandGroup(armReset, armRotateReset, clawClose);
+  private final Command clawArmReset = armReset.andThen(armRotateReset).andThen(clawClose);
+  */
+  
 
 
 
@@ -169,7 +186,7 @@ public class RobotContainer {
 
     //Default Commands
 
-    rotation.setDefaultCommand(rotateArm);
+    rotation.setDefaultCommand(stopArmRotation);
 
     extension.setDefaultCommand(armStop);
 
@@ -192,31 +209,34 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //Operator stick
-    new JoystickButton(operatorStick, Constants.ToggleClaw).whileTrue(clawOpen);
+    new JoystickButton(operatorStick, Constants.ToggleClaw).onTrue(clawUse); // figure out claw
     
-    new JoystickButton(operatorStick, Constants.ToggleClaw).whileTrue(clawClose);
 
-    new JoystickButton(operatorStick, Constants.ClawArmReturn).whileTrue(clawArmReset);
+    new JoystickButton(operatorStick, Constants.Raise).whileTrue(rotateUp);
 
-    //new JoystickButton(operatorStick, Constants.RotateArm).whileTrue(rotateArm);
+    new JoystickButton(operatorStick, Constants.Lower).whileTrue(rotateDown);
+
+     
+    new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(rotateArmHigh);
+    
+    //new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(rotateArmHigh.alongWith(extendArmHigh).andThen(clawOpen));
+
+    //new JoystickButton(operatorStick, Constants.ScoreHighCube).whileTrue(testHighCone);
+
+    new JoystickButton(operatorStick, Constants.ScoreMiddleCone).whileTrue(scoreMiddleCone);
+
+    new JoystickButton(operatorStick, Constants.ScoreMiddleCube).whileTrue(scoreMiddleCone);
+
+    new JoystickButton(operatorStick, Constants.ScoreLower).whileTrue(scoreLowCone);
+    
 
     new JoystickButton(operatorStick, Constants.ExtendArm).whileTrue(armExtend);
 
-    new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(raiseHighCone);
-    
-    new JoystickButton(operatorStick, Constants.ScoreHighCube).whileTrue(raiseHighCone);
 
-    new JoystickButton(operatorStick, Constants.ScoreMiddleCone).whileTrue(raiseMiddleCone);
-
-    new JoystickButton(operatorStick, Constants.ScoreMiddleCube).whileTrue(raiseMiddleCone);
-
-    new JoystickButton(operatorStick, Constants.LowerArm).whileTrue(lowerToGround);
-
-    new JoystickButton(operatorStick, Constants.RaiseArmHPS).whileTrue(raiseToHPS);
     //Leftstick
-    new JoystickButton(leftStick, Constants.AprilButton).whileTrue(visionApril);
+    //new JoystickButton(leftStick, Constants.AprilButton).whileTrue(visionApril);
 
-    new JoystickButton(leftStick, Constants.ReflectiveButton).whileTrue(visionReflective);
+    //new JoystickButton(leftStick, Constants.ReflectiveButton).whileTrue(visionReflective);
 
 
 

@@ -22,9 +22,9 @@ public class Rotation extends SubsystemBase {
   private RelativeEncoder rotationEncoderL;
   /** Creates a new Rotation. */
   public Rotation() {
-    rotationMotorSideR1 = new CANSparkMax(Constants.ExtensionSideRID, MotorType.kBrushless);
-    rotationMotorSideL1 = new CANSparkMax(Constants.ExtensionSideLID, MotorType.kBrushless);
-    rotationMotorSideR1.setInverted(true);
+    rotationMotorSideR1 = new CANSparkMax(Constants.RotateR1ID, MotorType.kBrushless);
+    rotationMotorSideL1 = new CANSparkMax(Constants.RotateSL1ID, MotorType.kBrushless);
+    rotationMotorSideR1.setInverted(false);
     rotationMotorSideL1.setInverted(false);
 
     rotationEncoderR = rotationMotorSideR1.getEncoder();
@@ -76,7 +76,7 @@ public class Rotation extends SubsystemBase {
   
   public double getRightArmAngle(){
     double rightArmAngle = (rotationEncoderR.getPosition()/100)*360;
-    return rightArmAngle;
+    return -rightArmAngle;
   }
 
 
@@ -99,5 +99,7 @@ public class Rotation extends SubsystemBase {
     SmartDashboard.putNumber("Left Arm Angle: ", getLeftArmAngle());
     SmartDashboard.putNumber("Right Arm Angle", getRightArmAngle());
     SmartDashboard.putNumber("Average Arm Angle: ", getAverageArmAngle());
+    SmartDashboard.putNumber("Left Arm Current: ", rotationEncoderL.getVelocity());
+    SmartDashboard.putNumber("Right Arm Current", rotationEncoderR.getVelocity());
   }
 }

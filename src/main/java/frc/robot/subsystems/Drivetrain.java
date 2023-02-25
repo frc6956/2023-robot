@@ -29,6 +29,12 @@ public class Drivetrain extends SubsystemBase {
     drivetrainMotorR2 = new CANSparkMax(Constants.DrivetrainR2ID, MotorType.kBrushless);
     drivetrainMotorL1 = new CANSparkMax(Constants.DrivetrainL1ID, MotorType.kBrushless);
     drivetrainMotorL2 = new CANSparkMax(Constants.DrivetrainL2ID, MotorType.kBrushless);
+    
+    drivetrainMotorR1.restoreFactoryDefaults();
+    drivetrainMotorR2.restoreFactoryDefaults();
+    drivetrainMotorL1.restoreFactoryDefaults();
+    drivetrainMotorL2.restoreFactoryDefaults();
+
     mainRobotDrive = new DifferentialDrive(drivetrainMotorL1, drivetrainMotorR1);
     drivetrainEncoderR1 = drivetrainMotorR1.getEncoder();
     drivetrainEncoderL1 = drivetrainMotorL1.getEncoder();

@@ -24,20 +24,33 @@ public class Extension extends SubsystemBase {
   public Extension() {
     extensionMotorSideR1 = new CANSparkMax(Constants.ExtensionSideRID, MotorType.kBrushless);
     extensionMotorSideL1 = new CANSparkMax(Constants.ExtensionSideLID, MotorType.kBrushless);
-    extensionMotorSideR1.setInverted(true);
+    extensionMotorSideR1.setInverted(false);
     extensionMotorSideL1.setInverted(false);
+
+    double velocityFactor = (3/4) * Math.PI / 12;
+    double positionFactor = (3/4) * Math.PI / 12;
 
     extensionEncoderL = extensionMotorSideL1.getEncoder();
     extensionEncoderR = extensionMotorSideR1.getEncoder();
 
+    extensionEncoderL.setVelocityConversionFactor(velocityFactor);
+    extensionEncoderR.setVelocityConversionFactor(velocityFactor);
+    extensionEncoderL.setPositionConversionFactor(positionFactor);
+    extensionEncoderR.setPositionConversionFactor(positionFactor);
 
 
+    resetPosition();
     
   }
 
   public void extendArm(double speed){
+    if (speed > 0.2){
+      extensionMotorSideL1.set(-0.2);
+    extensionMotorSideR1.set(0.2);
+    } else {
     extensionMotorSideL1.set(-speed);
     extensionMotorSideR1.set(speed);
+    }
   }
 
   public void stopArm(){
@@ -52,14 +65,12 @@ public class Extension extends SubsystemBase {
   }
 
   public double getLeftExtensionEncoderPosition(){
-    double position = (((3/4)*Math.PI)*extensionEncoderL.getPosition())/12; // getPosition returns number of revolutions of the motor
-    // motor gear ratio is 16
+    double position = extensionEncoderL.getPosition();
     return position;
   }
 
   public double getRightExtensionEncoderPosition(){
-    double position = (((3/4)*Math.PI)*extensionEncoderR.getPosition())/12; // getPosition returns number of revolutions of the motor
-    // motor gear ratio is 16
+    double position = extensionEncoderR.getPosition();
     return position;
   }
   //We need to********************

@@ -23,18 +23,18 @@ public final class Constants {
 
   }
  // CAN Ids for Motors
-  public static final int DrivetrainR1ID = 1;
-  public static final int DrivetrainR2ID = 2;
+  public static final int DrivetrainR1ID = 2;
+  public static final int DrivetrainR2ID = 1;
   public static final int DrivetrainL1ID = 3;
   public static final int DrivetrainL2ID = 4;
-  public static final int ExtensionSideRID = 5;
+  public static final int ExtensionSideRID = 9;
   public static final int ExtensionSideLID = 6;
   public static final int RotateR1ID = 7;
   public static final int RotateSL1ID = 8;
 
 
-  public static final int openSolenoid = 1;
-  public static final int closeSolenoid = 2;
+  public static final int openSolenoid = 0;
+  public static final int closeSolenoid = 1;
 
 
   public static final int OperatorPort = 0;
@@ -44,21 +44,30 @@ public final class Constants {
   public static final double maximumRange = 2;
 
   //Subject to later change
-  public static final double rotationSpeed = 1;
+  public static final double rotationSpeed = 0.1;
 
 
 
  //joystick buttons
-  public static final int ReflectiveButton = 1;
-  public static final int ToggleClaw = 2;
+  //public static final int ReflectiveButton = 1;
+
+  public static final int ToggleClaw = 1;
   public static final int ClawArmReturn = 3;
-  public static final int RotateArm = 4;
-  public static final int AprilButton = 5;
-  public static final int ExtendArm = 6;
-  public static final int ScoreHighCone = 7;
-  public static final int ScoreHighCube = 8;
-  public static final int ScoreMiddleCone = 9;
-  public static final int ScoreMiddleCube = 10;
-  public static final int LowerArm = 11;
-  public static final int RaiseArmHPS = 12;
+  //public static final int AprilButton = 5;
+  public static final int ExtendArm = 11;
+
+  public static final int ScoreHighCone = 8;
+  public static final int ScoreHighCube = 7;
+
+  public static final int ScoreMiddleCone = 10;
+  public static final int ScoreMiddleCube = 9;
+
+  public static final int ScoreLower = 12;
+ 
+
+  public static final int Lower = 4;
+  public static final int Raise = 3;
+
+  public static final int Yellow = 5;
+  public static final int Purple = 6;
 }

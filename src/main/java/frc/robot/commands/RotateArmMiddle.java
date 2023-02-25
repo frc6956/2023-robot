@@ -8,7 +8,7 @@ public class RotateArmMiddle extends RotateArm{
     public RotateArmMiddle(Rotation rotation){
         //Use addRequirements() here to declare subsystem dependencies
         //Subject to change
-        super(rotation, 0.3);
+        super(rotation, 20);
         addRequirements(rotation);
 
         this.rotation=rotation;

@@ -34,14 +34,15 @@ public class LEDManager extends CommandBase {
     if (DriverStation.isDSAttached()){
       
       if (DriverStation.isDisabled()){
-        led.rainbow();
+        //led.rainbow();
+        led.dimRainbow();
       } else {
 
-        if (DriverStation.getStickPOV(0, 0) == 0){ // need to change buttons
-          led.setAllRGBColor(led.purple);
-        }
-        else if (DriverStation.getStickPOV(0, 0) == 180){
+        if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Yellow)){ 
           led.setAllRGBColor(led.yellow);
+        }
+        else if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Purple)){
+          led.setAllRGBColor(led.purple);
          
         } else if (DriverStation.isAutonomous()){
           System.out.println(DriverStation.getAlliance());
@@ -55,6 +56,7 @@ public class LEDManager extends CommandBase {
         } // end of setting LED colors in Autonomous
 
         else { // if the robot is is enabled
+          
           led.setAllRGBColor(led.green);
         }
 
