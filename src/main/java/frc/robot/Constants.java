@@ -45,4 +45,20 @@ public final class Constants {
 
   //Subject to later change
   public static final double rotationSpeed = 1;
+
+
+
+ //joystick buttons
+  public static final int ReflectiveButton = 1;
+  public static final int ToggleClaw = 2;
+  public static final int ClawArmReturn = 3;
+  public static final int RotateArm = 4;
+  public static final int AprilButton = 5;
+  public static final int ExtendArm = 6;
+  public static final int ScoreHighCone = 7;
+  public static final int ScoreHighCube = 8;
+  public static final int ScoreMiddleCone = 9;
+  public static final int ScoreMiddleCube = 10;
+  public static final int LowerArm = 11;
+  public static final int RaiseArmHPS = 12;
 }

@@ -14,10 +14,14 @@ public class LEDs extends SubsystemBase {
   private AddressableLEDBuffer m_ledBuffer;
 
   public static int[] green = {0, 255, 0};
+  public static int[] greenNew = {0, 255, 0};
   public static int[] red = {255, 0, 0};
   public static int[] blue = {0, 0, 255};
   public static int[] gold = {50, 20, 0};
   public static int[] pink = {255, 0, 70};
+  public static int[] purple = {119, 0, 200};
+  public static int[] yellow = {251, 177, 23};
+
 
   double m_rainbowFirstPixelHue = 0;
 
@@ -28,7 +32,7 @@ public class LEDs extends SubsystemBase {
 
 
     //sets the length of the LEDs
-    m_ledBuffer = new AddressableLEDBuffer(50);
+    m_ledBuffer = new AddressableLEDBuffer(42);
 
 
     setUpLight();

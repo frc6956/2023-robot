@@ -16,11 +16,16 @@ import frc.robot.subsystems.Vision;
 import java.sql.Driver;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -53,7 +58,13 @@ public class RobotContainer {
     /*private final Command getInAngleRange = new RunCommand(
       () -> drivetrain.getInAngleRange(vision.getX()-5));
     */
-
+  /*private final Command getInDistanceRange = new RunCommand(
+    () -> drivetrain.getInRange(vision.getDistance()));
+  */
+  /*private final Command getInRobotRange(
+    () -> drivetrain.getInAllRange(vision.getDistance, vision.getX()));
+  */
+  
   //Claw commands
   private final Command clawOpen = new RunCommand(
     () -> claw.openClaw(), claw);
@@ -68,9 +79,15 @@ public class RobotContainer {
   private final Command armReset = new RunCommand(
     () -> extension.resetPosition(), extension);
 
+  private final Command extendArmHigh = new ExtendArmHigh(extension);
+  private final Command extendArmMiddle = new ExtendArmMiddle(extension);
+  private final Command extendArmLow = new ExtendArmLow(extension);
+  private final Command extendArmSuperHigh = new ExtendArmSuperHigh(extension);
+  
+
   //rotation commands
   private final Command rotateArm = new RunCommand(
-    () -> rotation.rotate(0), rotation);
+    () -> rotation.rotate(operatorStick.getY()), rotation);
   private final Command stopArmRotation = new RunCommand(
     () -> rotation.stopRotate(), rotation);
   private final Command armRotateReset = new RunCommand(
@@ -79,6 +96,11 @@ public class RobotContainer {
     //Subject to change
     //Potential to create command for this down the road
     () -> rotation.setArmAngle(10), rotation);
+  
+    private final Command rotateArmSuperHigh = new RotateArmSuperHigh(rotation);
+    private final Command rotateArmHigh = new RotateArmHigh(rotation);
+    private final Command rotateArmMiddle = new RotateArmMiddle(rotation);
+    private final Command rotateArmLow = new RotateArmLow(rotation);
 
   // LED commands
 
@@ -93,6 +115,34 @@ public class RobotContainer {
   private final Command visionReflective = new RunCommand(() -> vision.setVisionTarget(), vision);
 
   //Auton commands?
+
+
+
+  //Scoring Commands
+  private final Command raiseHighCone = new ParallelCommandGroup(rotateArmHigh, extendArmHigh);
+  private final Command scoreHighCone = new SequentialCommandGroup(raiseHighCone, clawOpen);
+
+  private final Command raiseMiddleCone = new ParallelCommandGroup(rotateArmMiddle, extendArmMiddle);
+  private final Command scoreMiddleCone = new SequentialCommandGroup(raiseMiddleCone, clawOpen);
+
+  private final Command raiseLowCone = new ParallelCommandGroup(rotateArmLow, extendArmLow);
+  private final Command scoreLowCone = new SequentialCommandGroup(raiseLowCone, clawOpen);
+
+  //Human player pickup
+  private final Command raiseToHPS = new ParallelCommandGroup(rotateArmSuperHigh, extendArmSuperHigh);
+  private final Command getFromHPS = new SequentialCommandGroup(clawOpen, raiseToHPS, clawClose);
+
+//Ground Pick Up
+  private final Command lowerToGround = new ParallelCommandGroup(rotateArmLow, extendArmLow);
+  private final Command getFromGround = new SequentialCommandGroup(clawOpen, lowerToGround, clawClose);
+
+  //set Return
+  private final Command clawArmReset = new SequentialCommandGroup(armReset, armRotateReset, clawClose);
+
+
+
+
+
 
 
 
@@ -119,7 +169,7 @@ public class RobotContainer {
 
     //Default Commands
 
-    rotation.setDefaultCommand(stopArmRotation);
+    rotation.setDefaultCommand(rotateArm);
 
     extension.setDefaultCommand(armStop);
 
@@ -141,9 +191,38 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    //Operator stick
+    new JoystickButton(operatorStick, Constants.ToggleClaw).whileTrue(clawOpen);
     
-    
+    new JoystickButton(operatorStick, Constants.ToggleClaw).whileTrue(clawClose);
 
+    new JoystickButton(operatorStick, Constants.ClawArmReturn).whileTrue(clawArmReset);
+
+    //new JoystickButton(operatorStick, Constants.RotateArm).whileTrue(rotateArm);
+
+    new JoystickButton(operatorStick, Constants.ExtendArm).whileTrue(armExtend);
+
+    new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(raiseHighCone);
+    
+    new JoystickButton(operatorStick, Constants.ScoreHighCube).whileTrue(raiseHighCone);
+
+    new JoystickButton(operatorStick, Constants.ScoreMiddleCone).whileTrue(raiseMiddleCone);
+
+    new JoystickButton(operatorStick, Constants.ScoreMiddleCube).whileTrue(raiseMiddleCone);
+
+    new JoystickButton(operatorStick, Constants.LowerArm).whileTrue(lowerToGround);
+
+    new JoystickButton(operatorStick, Constants.RaiseArmHPS).whileTrue(raiseToHPS);
+    //Leftstick
+    new JoystickButton(leftStick, Constants.AprilButton).whileTrue(visionApril);
+
+    new JoystickButton(leftStick, Constants.ReflectiveButton).whileTrue(visionReflective);
+
+
+
+    // add more joystick buttons once planned
+    
+    new Trigger(() -> DriverStation.isAutonomous()).whileTrue(visionApril);
     
   }
 
@@ -154,6 +233,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return; 
+    return extendArmHigh; 
   }
 }

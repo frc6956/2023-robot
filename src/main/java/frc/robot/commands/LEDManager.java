@@ -5,9 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LEDs;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
+//Possibly need to import arm or intake
+
 
 public class LEDManager extends CommandBase {
   /** Creates a new LEDManager. */
@@ -32,11 +37,14 @@ public class LEDManager extends CommandBase {
         led.rainbow();
       } else {
 
-        if (DriverStation.getStickButton(0, 6)){ // need to change buttons
-          //
-
+        if (DriverStation.getStickPOV(0, 0) == 0){ // need to change buttons
+          led.setAllRGBColor(led.purple);
+        }
+        else if (DriverStation.getStickPOV(0, 0) == 180){
+          led.setAllRGBColor(led.yellow);
+         
         } else if (DriverStation.isAutonomous()){
-
+          System.out.println(DriverStation.getAlliance());
           if (DriverStation.getAlliance() == Alliance.Blue){
             led.setAllRGBColor(led.blue);
           } else if (DriverStation.getAlliance() == Alliance.Red){

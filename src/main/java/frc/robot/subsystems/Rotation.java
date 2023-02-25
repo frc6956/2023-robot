@@ -73,7 +73,7 @@ public class Rotation extends SubsystemBase {
     double leftArmAngle = (rotationEncoderL.getPosition()/100)*360;
     return leftArmAngle;
   }
-
+  
   public double getRightArmAngle(){
     double rightArmAngle = (rotationEncoderR.getPosition()/100)*360;
     return rightArmAngle;
