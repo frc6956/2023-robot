@@ -12,6 +12,9 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Rotation;
 import frc.robot.subsystems.Vision;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 //import java.sql.Driver;
 
@@ -29,6 +32,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagDetection;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -38,13 +47,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   
-
-  private final Drivetrain drivetrain = new Drivetrain();
+  private final Vision vision = new Vision();
+  private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
+  private final Drivetrain drivetrain = new Drivetrain(m_gyro, vision);
   private final Claw claw = new Claw();
   private final Extension extension = new Extension();
   private final LEDs leds = new LEDs();
   private final Rotation rotation = new Rotation();
-  private final Vision vision = new Vision();
   //create new gyro
 
 
@@ -76,7 +85,7 @@ public class RobotContainer {
 
   //extension commands
   private final Command armExtend = new RunCommand(
-    () -> extension.extendArm(-operatorStick.getY()), extension);
+    () -> extension.extendArm(-operatorStick.getY()*3), extension);
   private final Command armStop = new RunCommand(
     () -> extension.stopArm(), extension);
   private final Command armReset = new RunCommand(
@@ -156,9 +165,12 @@ public class RobotContainer {
   */
   
 
+//Autonomous Commands
 
-
-
+private final Command autonLowerArCommand = new RotateArmLow(rotation);//.andThen(new ExtendArmHigh(extension)).alongWith(new RotateArmHigh(rotation)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
+private final Command autonOpenClawScoreLow = new InstantCommand(() -> claw.openClaw(), claw);
+private final Command autonScoreLowCommand = new RotateArmLow(rotation).andThen(new InstantCommand(() -> claw.openClaw(), claw));
+private final Command autonMoveBack = new DriveDistance(drivetrain, 10, -0.5);
 
 
 
@@ -209,7 +221,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //Operator stick
-    new JoystickButton(operatorStick, Constants.ToggleClaw).onTrue(clawUse); // figure out claw
+    new JoystickButton(operatorStick, Constants.ToggleClaw).debounce(0.1).onTrue(clawUse); // figure out claw
     
 
     new JoystickButton(operatorStick, Constants.Raise).whileTrue(rotateUp);
@@ -253,6 +265,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return extendArmHigh; 
+    return autonScoreLowCommand; 
   }
 }
