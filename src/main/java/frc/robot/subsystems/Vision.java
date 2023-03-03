@@ -56,7 +56,7 @@ public class Vision extends SubsystemBase {
     differenceAngleY = ty.getDouble(0.0);
     totalAngleY = fixedVisionAngle+differenceAngleY;
     distance =  Math.abs((ringHeight-visionHeight)) / Math.atan((totalAngleY*Math.PI)/180) - visionOffset;
-    if (Constants.minumumRange<distance && distance<Constants.maximumRange) {
+    if (Constants.Vision.minumumRange<distance && distance<Constants.Vision.maximumRange) {
       inRange = true;
     } else {
       inRange = false;

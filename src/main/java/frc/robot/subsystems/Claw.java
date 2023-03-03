@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Claw extends SubsystemBase {
   
-  private DoubleSolenoid m_clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.openSolenoid, Constants.closeSolenoid);
+  private DoubleSolenoid m_clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.PH.clawOpen, Constants.PH.clawClose);
 
   
   Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
@@ -57,6 +57,7 @@ public class Claw extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Compressor Enabled", phCompressor.isEnabled());
     SmartDashboard.putBoolean("Compressor Switch Value", phCompressor.getPressureSwitchValue());
     SmartDashboard.putNumber("Compressor Current", phCompressor.getCurrent());
@@ -64,8 +65,5 @@ public class Claw extends SubsystemBase {
     SmartDashboard.putBoolean("Solennoid Reverse", m_clawSolenoid.isRevSolenoidDisabled());
     SmartDashboard.putBoolean("Solennoid Forward", m_clawSolenoid.isFwdSolenoidDisabled());
     SmartDashboard.putBoolean("Is Claw Open", open);
-
-
-    // This method will be called once per scheduler run
   }
 }

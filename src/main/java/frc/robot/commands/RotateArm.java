@@ -24,11 +24,11 @@ public class RotateArm extends CommandBase{
     //Called everytime the scheduler runs while the command is scheduled
     @Override
     public void execute(){
-        if (rotation.getAveragePosition()>angle){
+        if (rotation.getAverageArmAngle()>angle){
             //subject to change
             rotation.rotate(-0.07);
         }
-        else if (rotation.getAveragePosition()<angle){
+        else if (rotation.getAverageArmAngle()<angle){
             //subject to change
             rotation.rotate(0.07);
         }
@@ -41,7 +41,7 @@ public class RotateArm extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        if(angle >= 0 && rotation.getAveragePosition()>=angle){
+        if(angle >= 0 && rotation.getAverageArmAngle()>=angle){
             return true;
         }
         else if (angle<=0 && rotation.getAverageArmAngle()<=angle){

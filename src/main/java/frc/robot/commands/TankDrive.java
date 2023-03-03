@@ -4,19 +4,22 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class TankDrive extends CommandBase {
   Drivetrain drivetrain;
-  Joystick leftStick;
-  Joystick rightStick;
+  DoubleSupplier left;
+  DoubleSupplier right;
+
   /** Creates a new TankDrive. */
-  public TankDrive(Drivetrain drivetrain, Joystick leftStick, Joystick rightStick) {
+  public TankDrive(Drivetrain drivetrain, DoubleSupplier left, DoubleSupplier right) {
     this.drivetrain = drivetrain;
-    this.leftStick = leftStick;
-    this.rightStick = rightStick;
+    this.left = left;
+    this.right = right;
+    
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
   }
@@ -28,7 +31,7 @@ public class TankDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.tankDrive(-leftStick.getY(), -rightStick.getY());
+    drivetrain.tankDrive(left.getAsDouble(), right.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

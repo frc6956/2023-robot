@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -54,21 +53,15 @@ public class RobotContainer {
   private final Extension extension = new Extension();
   private final LEDs leds = new LEDs();
   private final Rotation rotation = new Rotation();
-  //create new gyro
 
 
-
-  private final Joystick operatorStick = new Joystick(Constants.OperatorPort);
-  private final Joystick leftStick = new Joystick(Constants.LeftPort);
-  private final Joystick rightStick = new Joystick(Constants.RightPort);
+  private final Joystick operatorStick = new Joystick(Constants.USB.operator);
+  private final Joystick leftStick = new Joystick(Constants.USB.left);
+  private final Joystick rightStick = new Joystick(Constants.USB.right);
 
 //drivetrain commands
-  private final Command tankDrive = new TankDrive(drivetrain, leftStick, rightStick);
+  private final Command tankDrive = new TankDrive(drivetrain, () -> -leftStick.getY(), () -> -rightStick.getY());
 
-  // private final Command tankDriveForward = new RunCommand(
-  //   () -> drivetrain.tankDrive(-0.5,-0.5), drivetrain);
-  // private final Command tankDriveBackward = new RunCommand(
-  //   () -> drivetrain.tankDrive(0.5, 0.5), drivetrain);
     /*private final Command getInAngleRange = new RunCommand(
       () -> drivetrain.getInAngleRange(vision.getX()-5));
     */
@@ -89,7 +82,7 @@ public class RobotContainer {
 
   //extension commands
   private final Command armExtend = new RunCommand(
-    () -> extension.extendArm(-operatorStick.getY()*3), extension);
+    () -> extension.extendArm(-operatorStick.getY()), extension);
   private final Command armStop = new RunCommand(
     () -> extension.stopArm(), extension);
   private final Command armReset = new RunCommand(
@@ -103,9 +96,9 @@ public class RobotContainer {
 
   //rotation commands
   private final Command rotateUp = new RunCommand(
-    () -> rotation.rotate(Constants.rotationSpeed), rotation);
+    () -> rotation.rotate(Constants.Rotation.rotationSpeed), rotation);
   private final Command rotateDown = new RunCommand(
-    () -> rotation.rotate(-Constants.rotationSpeed), rotation);
+    () -> rotation.rotate(-Constants.Rotation.rotationSpeed), rotation);
   private final Command stopArmRotation = new RunCommand(
     () -> rotation.stopRotate(), rotation);
   private final Command armRotateReset = new RunCommand(
@@ -225,39 +218,33 @@ private final Command autonMoveBack = new DriveDistance(drivetrain, 10, -0.5);
    */
   private void configureBindings() {
     //Operator stick
-    new JoystickButton(operatorStick, Constants.ToggleClaw).debounce(0.1).onTrue(clawUse); // figure out claw
+    new JoystickButton(operatorStick, Constants.OperatorButtons.ToggleClaw).debounce(0.1).onTrue(clawUse); // figure out claw
     
 
-    new JoystickButton(operatorStick, Constants.Raise).whileTrue(rotateUp);
+    new JoystickButton(operatorStick, Constants.OperatorButtons.Raise).whileTrue(rotateUp);
 
-    new JoystickButton(operatorStick, Constants.Lower).whileTrue(rotateDown);
+    new JoystickButton(operatorStick, Constants.OperatorButtons.Lower).whileTrue(rotateDown);
 
      
-    new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(rotateArmHigh);
+    new JoystickButton(operatorStick, Constants.OperatorButtons.ScoreHighCone).whileTrue(rotateArmHigh);
     
-    //new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(rotateArmHigh.alongWith(extendArmHigh).andThen(clawOpen));
+    //new JoystickButton(operatorStick, Constants.OperatorButtons.ScoreHighCone).whileTrue(rotateArmHigh.alongWith(extendArmHigh).andThen(clawOpen));
 
-    //new JoystickButton(operatorStick, Constants.ScoreHighCube).whileTrue(testHighCone);
+    //new JoystickButton(operatorStick, Constants.OperatorButtons.ScoreHighCube).whileTrue(testHighCone);
 
-    new JoystickButton(operatorStick, Constants.ScoreMiddleCone).whileTrue(scoreMiddleCone);
+    new JoystickButton(operatorStick, Constants.OperatorButtons.ScoreMiddleCone).whileTrue(scoreMiddleCone);
 
-    new JoystickButton(operatorStick, Constants.ScoreMiddleCube).whileTrue(scoreMiddleCone);
+    new JoystickButton(operatorStick, Constants.OperatorButtons.ScoreMiddleCube).whileTrue(scoreMiddleCone);
 
-    new JoystickButton(operatorStick, Constants.ScoreLower).whileTrue(scoreLowCone);
+    new JoystickButton(operatorStick, Constants.OperatorButtons.ScoreLower).whileTrue(scoreLowCone);
     
 
-    new JoystickButton(operatorStick, Constants.ExtendArm).whileTrue(armExtend);
-
-    //new JoystickButton(leftStick, Constants.RunForward).whileTrue(tankDriveForward);
-
-    //new JoystickButton(rightStick, Constants.RunBackward).whileTrue(tankDriveBackward);
+    new JoystickButton(operatorStick, Constants.OperatorButtons.ExtendArm).whileTrue(armExtend);
 
     //Leftstick
-    //new JoystickButton(leftStick, Constants.AprilButton).whileTrue(visionApril);
+    //new JoystickButton(leftStick, Constants.DriverLeftButtons.AprilButton).whileTrue(visionApril);
 
-    //new JoystickButton(leftStick, Constants.ReflectiveButton).whileTrue(visionReflective);
-
-
+    //new JoystickButton(leftStick, Constants.DriverLeftButtons.ReflectiveButton).whileTrue(visionReflective);
 
     // add more joystick buttons once planned
     

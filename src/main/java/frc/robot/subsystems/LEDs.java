@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class LEDs extends SubsystemBase {
 
@@ -29,11 +30,11 @@ public class LEDs extends SubsystemBase {
   /** Creates a new LEDs. */
   public LEDs() {
     //PWM port 1 on the Rio
-    m_led = new AddressableLED(9);
+    m_led = new AddressableLED(Constants.PWM.leds);
 
 
     //sets the length of the LEDs
-    m_ledBuffer = new AddressableLEDBuffer(42);
+    m_ledBuffer = new AddressableLEDBuffer(Constants.LEDs.length);
 
 
     setUpLight();

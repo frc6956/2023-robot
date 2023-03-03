@@ -38,10 +38,10 @@ public class LEDManager extends CommandBase {
         led.dimRainbow();
       } else {
 
-        if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Yellow)){ 
+        if (DriverStation.getStickButton(Constants.USB.operator, Constants.OperatorButtons.Yellow)){ 
           led.setAllRGBColor(led.yellow);
         }
-        else if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Purple)){
+        else if (DriverStation.getStickButton(Constants.USB.operator, Constants.OperatorButtons.Purple)){
           led.setAllRGBColor(led.purple);
          
         } else if (DriverStation.isAutonomous()){

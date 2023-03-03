@@ -47,15 +47,21 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putData("Field", m_field);
     SmartDashboard.putData(m_field);
 
-    drivetrainMotorR1 = new CANSparkMax(Constants.DrivetrainR1ID, MotorType.kBrushless);
-    drivetrainMotorR2 = new CANSparkMax(Constants.DrivetrainR2ID, MotorType.kBrushless);
-    drivetrainMotorL1 = new CANSparkMax(Constants.DrivetrainL1ID, MotorType.kBrushless);
-    drivetrainMotorL2 = new CANSparkMax(Constants.DrivetrainL2ID, MotorType.kBrushless);
+    drivetrainMotorR1 = new CANSparkMax(Constants.CAN.DrivetrainR1ID, MotorType.kBrushless);
+    drivetrainMotorR2 = new CANSparkMax(Constants.CAN.DrivetrainR2ID, MotorType.kBrushless);
+    drivetrainMotorL1 = new CANSparkMax(Constants.CAN.DrivetrainL1ID, MotorType.kBrushless);
+    drivetrainMotorL2 = new CANSparkMax(Constants.CAN.DrivetrainL2ID, MotorType.kBrushless);
     
     drivetrainMotorR1.restoreFactoryDefaults();
     drivetrainMotorR2.restoreFactoryDefaults();
     drivetrainMotorL1.restoreFactoryDefaults();
     drivetrainMotorL2.restoreFactoryDefaults();
+
+    drivetrainMotorR1.setInverted(true);
+    drivetrainMotorL1.setInverted(false);
+    
+    drivetrainMotorL2.follow(drivetrainMotorL1);
+    drivetrainMotorR2.follow(drivetrainMotorR1);
 
     drivetrainMotorR1.setIdleMode(IdleMode.kCoast);
     drivetrainMotorR2.setIdleMode(IdleMode.kCoast);
@@ -66,28 +72,17 @@ public class Drivetrain extends SubsystemBase {
     drivetrainEncoderL1 = drivetrainMotorL1.getEncoder();
 
     this.m_gyro = m_gyro;
-//**********************NEED TO FIGURE OUT CONVERSION FACTORS***********************
-    double encoderVelocityConversionFactor = ((6*Math.PI*0.0254)/60)/10.71;
-    double encoderPositionConversionFactor = ((6*Math.PI*0.0254))/10.71;
-    drivetrainEncoderL1.setPositionConversionFactor(encoderPositionConversionFactor);
-    drivetrainEncoderR1.setPositionConversionFactor(encoderPositionConversionFactor);
-    drivetrainEncoderL1.setVelocityConversionFactor(encoderVelocityConversionFactor);
-    drivetrainEncoderR1.setVelocityConversionFactor(encoderVelocityConversionFactor);
-//**********************************************************************************
+    
+    drivetrainEncoderL1.setPositionConversionFactor(Constants.Drivetrain.metersPerTick);
+    drivetrainEncoderR1.setPositionConversionFactor(Constants.Drivetrain.metersPerTick);
+    drivetrainEncoderL1.setVelocityConversionFactor(Constants.Drivetrain.metersPerTick / Constants.secondsPerMinute);
+    drivetrainEncoderR1.setVelocityConversionFactor(Constants.Drivetrain.metersPerTick / Constants.secondsPerMinute);
+    
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), drivetrainEncoderL1.getPosition(), drivetrainEncoderR1.getPosition());
 
     mainRobotDrive = new DifferentialDrive(drivetrainMotorL1, drivetrainMotorR1);
-    
-
-
-    drivetrainMotorR1.setInverted(true);
-    drivetrainMotorL1.setInverted(false);
-    
-    drivetrainMotorL2.follow(drivetrainMotorL1);
-    drivetrainMotorR2.follow(drivetrainMotorR1);
 
     resetPosition();
-    SmartDashboard.putData(this);
   }
 
   double position;
