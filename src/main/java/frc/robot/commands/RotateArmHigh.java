@@ -2,10 +2,10 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Rotation;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
+//import javax.swing.text.StyledEditorKit.BoldAction;
 
 //import frc.robot.subsystems.Extension;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+//import edu.wpi.first.wpilibj2.command.CommandBase;
 
 
 public class RotateArmHigh extends RotateArm{

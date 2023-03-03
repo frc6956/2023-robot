@@ -20,7 +20,7 @@ public class LEDs extends SubsystemBase {
   public static int[] gold = {50, 20, 0};
   public static int[] pink = {255, 0, 70};
   public static int[] purple = {180, 0, 255};
-  public static int[] yellow = {255, 255, 0};
+  public static int[] yellow = {255, 140, 0};
 
 
   double m_rainbowFirstPixelHue = 0;
@@ -29,7 +29,7 @@ public class LEDs extends SubsystemBase {
   /** Creates a new LEDs. */
   public LEDs() {
     //PWM port 1 on the Rio
-    m_led = new AddressableLED(1);
+    m_led = new AddressableLED(9);
 
 
     //sets the length of the LEDs
@@ -92,7 +92,7 @@ public class LEDs extends SubsystemBase {
       final int hue2 = ((int)(m_rainbowFirstPixelHue2) - (i * 180 / m_ledBuffer.getLength())) % 180;
 
       if (i > m_ledBuffer.getLength()/2){
-        m_ledBuffer.setHSV((m_ledBuffer.getLength() - i), hue, 255, 64);
+        m_ledBuffer.setHSV((m_ledBuffer.getLength() - i), hue2, 255, 64);
       } else {
         m_ledBuffer.setHSV(i, hue, 255, 64);
       }

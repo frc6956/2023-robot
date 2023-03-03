@@ -111,7 +111,7 @@ public class Vision extends SubsystemBase {
     return (isValid() && inAngleRange);
   }
 
-  public Pose2d getLimeLightPose(){
+  public Pose2d getLimelightPose(){
     Pose2d pose2d = null;
     double[] robot3D = robotBotPose3d.getDoubleArray(new double[6]);
 

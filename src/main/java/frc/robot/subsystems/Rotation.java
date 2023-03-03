@@ -24,6 +24,10 @@ public class Rotation extends SubsystemBase {
   public Rotation() {
     rotationMotorSideR1 = new CANSparkMax(Constants.RotateR1ID, MotorType.kBrushless);
     rotationMotorSideL1 = new CANSparkMax(Constants.RotateSL1ID, MotorType.kBrushless);
+
+    rotationMotorSideL1.restoreFactoryDefaults();
+    rotationMotorSideR1.restoreFactoryDefaults();
+
     rotationMotorSideR1.setInverted(false);
     rotationMotorSideL1.setInverted(false);
 
@@ -39,6 +43,9 @@ public class Rotation extends SubsystemBase {
   public void rotate(double speed){
     rotationMotorSideL1.set(-speed);
     rotationMotorSideR1.set(speed);
+    if (getAverageArmAngle() <0){
+      resetPosition();
+    }
   }
 
 

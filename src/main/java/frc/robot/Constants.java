@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+//import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -23,14 +23,14 @@ public final class Constants {
 
   }
  // CAN Ids for Motors
-  public static final int DrivetrainR1ID = 2;
-  public static final int DrivetrainR2ID = 1;
-  public static final int DrivetrainL1ID = 3;
-  public static final int DrivetrainL2ID = 4;
-  public static final int ExtensionSideRID = 9;
-  public static final int ExtensionSideLID = 6;
-  public static final int RotateR1ID = 7;
-  public static final int RotateSL1ID = 8;
+  public static final int DrivetrainR1ID = 2; //2
+  public static final int DrivetrainR2ID = 1; //1
+  public static final int DrivetrainL1ID = 3; //3
+  public static final int DrivetrainL2ID = 4; //4
+  public static final int ExtensionSideRID = 9;//9;
+  public static final int ExtensionSideLID = 6;//6;
+  public static final int RotateR1ID = 7; //7
+  public static final int RotateSL1ID = 8; //8
 
 
   public static final int openSolenoid = 0;
@@ -45,7 +45,7 @@ public final class Constants {
 
   //Subject to later change
   public static final double rotationSpeed = 0.1;
-
+  public static final double maxExtensionPosition = 200;
 
 
  //joystick buttons
@@ -70,4 +70,8 @@ public final class Constants {
 
   public static final int Yellow = 5;
   public static final int Purple = 6;
+
+  public static final int RunBackward = 1;
+  
+  public static final int RunForward = 1;
 }

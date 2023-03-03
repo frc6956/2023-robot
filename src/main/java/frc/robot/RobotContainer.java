@@ -63,8 +63,12 @@ public class RobotContainer {
   private final Joystick rightStick = new Joystick(Constants.RightPort);
 
 //drivetrain commands
-  private final Command tankDrive = new RunCommand(
-    () -> drivetrain.tankDrive(-leftStick.getY(), -rightStick.getY()), drivetrain);
+  private final Command tankDrive = new TankDrive(drivetrain, leftStick, rightStick);
+
+  // private final Command tankDriveForward = new RunCommand(
+  //   () -> drivetrain.tankDrive(-0.5,-0.5), drivetrain);
+  // private final Command tankDriveBackward = new RunCommand(
+  //   () -> drivetrain.tankDrive(0.5, 0.5), drivetrain);
     /*private final Command getInAngleRange = new RunCommand(
       () -> drivetrain.getInAngleRange(vision.getX()-5));
     */
@@ -244,6 +248,9 @@ private final Command autonMoveBack = new DriveDistance(drivetrain, 10, -0.5);
 
     new JoystickButton(operatorStick, Constants.ExtendArm).whileTrue(armExtend);
 
+    //new JoystickButton(leftStick, Constants.RunForward).whileTrue(tankDriveForward);
+
+    //new JoystickButton(rightStick, Constants.RunBackward).whileTrue(tankDriveBackward);
 
     //Leftstick
     //new JoystickButton(leftStick, Constants.AprilButton).whileTrue(visionApril);
