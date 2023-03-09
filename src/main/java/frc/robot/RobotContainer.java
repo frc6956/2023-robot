@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -183,10 +184,10 @@ private final Command autonExtend = new ExtendArmHigh(extension).withTimeout(4);
 private final Command autonRotateHigh = new RotateArmHigh(rotation).withTimeout(3);
 private final Command autonRotateReturn = new RotateArmSuperHigh(rotation).withTimeout(2.2);
 private final Command autonReturnExtend = new ExtendArmLow(extension).withTimeout(1.5);
-private final Command autonClaw2 = new InstantCommand(() -> claw.openClaw(), claw);
+private final Command autonClaw2 = new InstantCommand(() -> claw.openClaw(), claw);;
 private final Command autonMoveBackSpeed = new DriveDistance(drivetrain, -4, 0.3);
 private final Command autonMoveForwardSpeed = new DriveDistance(drivetrain, 4, 0.3);
-private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTimeout(0.5);
+private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTimeout(1);
 
 
 
@@ -288,6 +289,6 @@ private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTi
     // An example command will be run in autonomous
     //return autonExtend.andThen(autonRotateHigh).andThen(autonOpenClawScoreLow).andThen(autonClaw2).andThen(autonRotateReturn).andThen(autonReturnExtend).andThen(autonMoveBack); 
     //return autonMoveBackSpeed.andThen(autonMoveForwardSpeed).andThen(autonMoveBack);
-    return autonLowerArmMiddle.andThen(autonClaw2).andThen(autonMoveBack);
+    return autonLowerArmMiddle.andThen(autonClaw2).andThen(new WaitCommand(0.5)).andThen(autonMoveBack);
   }
 }

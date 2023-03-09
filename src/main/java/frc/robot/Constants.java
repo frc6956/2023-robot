@@ -33,8 +33,8 @@ public final class Constants {
   public static final int RotateSL1ID = 8; //8
 
 
-  public static final int openSolenoid = 0;
-  public static final int closeSolenoid = 1;
+  public static final int openSolenoid = 1;
+  public static final int closeSolenoid = 0;
 
 
   public static final int OperatorPort = 0;
