@@ -51,7 +51,7 @@ public final class Constants {
  //joystick buttons
   //public static final int ReflectiveButton = 1;
 
-  public static final int ToggleClaw = 1;
+  public static final int ToggleClaw = 2;
   public static final int ClawArmReturn = 3;
   //public static final int AprilButton = 5;
   public static final int ExtendArm = 11;
@@ -74,4 +74,6 @@ public final class Constants {
   public static final int RunBackward = 1;
   
   public static final int RunForward = 1;
+
+  public static final int BrakeRobot = 16;
 }

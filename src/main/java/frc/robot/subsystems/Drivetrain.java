@@ -67,8 +67,8 @@ public class Drivetrain extends SubsystemBase {
 
     this.m_gyro = m_gyro;
 //**********************NEED TO FIGURE OUT CONVERSION FACTORS***********************
-    double encoderVelocityConversionFactor = ((6*Math.PI*0.0254)/60)/10.71;
-    double encoderPositionConversionFactor = ((6*Math.PI*0.0254))/10.71;
+    double encoderVelocityConversionFactor = ((6*Math.PI*0.254)/60)/8.45;
+    double encoderPositionConversionFactor = ((6*Math.PI*0.254))/8.45;
     drivetrainEncoderL1.setPositionConversionFactor(encoderPositionConversionFactor);
     drivetrainEncoderR1.setPositionConversionFactor(encoderPositionConversionFactor);
     drivetrainEncoderL1.setVelocityConversionFactor(encoderVelocityConversionFactor);
@@ -150,18 +150,33 @@ public class Drivetrain extends SubsystemBase {
     drivetrainEncoderR1.setPosition(0);
     drivetrainEncoderL1.setPosition(0);
   }
+
+  public void brake(){
+    drivetrainMotorL1.setIdleMode(IdleMode.kBrake);
+    drivetrainMotorR1.setIdleMode(IdleMode.kBrake);
+    drivetrainMotorL2.setIdleMode(IdleMode.kBrake);
+    drivetrainMotorR2.setIdleMode(IdleMode.kBrake);
+  }
+
+  public void stopBrake(){
+    drivetrainMotorL1.setIdleMode(IdleMode.kCoast);
+    drivetrainMotorR1.setIdleMode(IdleMode.kCoast);
+    drivetrainMotorL2.setIdleMode(IdleMode.kCoast);
+    drivetrainMotorR2.setIdleMode(IdleMode.kCoast);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     m_odometry.update(m_gyro.getRotation2d(), getDistance(drivetrainEncoderL1), getDistance(drivetrainEncoderR1));
 
-  
+  /* 
     if (vision.hasTarget() && (!DriverStation.isAutonomous() || !DriverStation.isEnabled()) && vision.getDistance() < 140){
       Pose2d pose = vision.getLimelightPose();
       if (pose != null) {
         resetOdometry(pose);
       }
-    }
+    }*/
     m_odometry.update(m_gyro.getRotation2d(), getDistance(drivetrainEncoderL1), getDistance(drivetrainEncoderR1));
     m_field.setRobotPose(m_odometry.getPoseMeters());
     SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
@@ -169,5 +184,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Drivetrain Right Encoder Velocity", drivetrainEncoderR1.getVelocity());
     SmartDashboard.putNumber("Drivetrain Left Encoder Distance", getDistance(drivetrainEncoderL1));
     SmartDashboard.putNumber("Drivetrain Right Encoder Distance", getDistance(drivetrainEncoderR1));
+    SmartDashboard.putNumber("Drive Position", getPosition());
+    
   }
 }

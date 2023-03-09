@@ -12,7 +12,7 @@ public class RotateArmHigh extends RotateArm{
     public RotateArmHigh(Rotation rotation){
         //Use addRequirements() here to declare subsystem dependencies
         //Subject to change
-        super(rotation, 0);
+        super(rotation, 0.19);
         addRequirements(rotation);
 
         this.rotation=rotation;

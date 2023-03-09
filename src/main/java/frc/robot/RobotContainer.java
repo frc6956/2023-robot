@@ -64,6 +64,8 @@ public class RobotContainer {
 
 //drivetrain commands
   private final Command tankDrive = new TankDrive(drivetrain, leftStick, rightStick);
+  private final Command brakeRobot = new BrakeRobot(drivetrain);
+  private final Command stopBrakeRobot = new StopBrakeRobot(drivetrain);
 
   // private final Command tankDriveForward = new RunCommand(
   //   () -> drivetrain.tankDrive(-0.5,-0.5), drivetrain);
@@ -174,9 +176,17 @@ public class RobotContainer {
 private final Command autonLowerArCommand = new RotateArmLow(rotation);//.andThen(new ExtendArmHigh(extension)).alongWith(new RotateArmHigh(rotation)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 private final Command autonOpenClawScoreLow = new InstantCommand(() -> claw.openClaw(), claw);
 private final Command autonScoreLowCommand = new RotateArmLow(rotation).andThen(new InstantCommand(() -> claw.openClaw(), claw));
-private final Command autonMoveBack = new DriveDistance(drivetrain, 10, -0.5);
-
-
+private final Command autonMoveBack = new DriveDistance(drivetrain, -45, 0.42);
+private final Command autonExtendOpenBack = new ExtendArmHigh(extension).andThen(() -> claw.openClaw(), claw).andThen(new RotateArmHigh(rotation));
+private final Command autonExtendOpen = new ExtendArmHigh(extension).andThen(() -> claw.openClaw(), claw);
+private final Command autonExtend = new ExtendArmHigh(extension).withTimeout(4);
+private final Command autonRotateHigh = new RotateArmHigh(rotation).withTimeout(3);
+private final Command autonRotateReturn = new RotateArmSuperHigh(rotation).withTimeout(2.2);
+private final Command autonReturnExtend = new ExtendArmLow(extension).withTimeout(1.5);
+private final Command autonClaw2 = new InstantCommand(() -> claw.openClaw(), claw);
+private final Command autonMoveBackSpeed = new DriveDistance(drivetrain, -4, 0.3);
+private final Command autonMoveForwardSpeed = new DriveDistance(drivetrain, 4, 0.3);
+private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTimeout(0.5);
 
 
 
@@ -232,6 +242,10 @@ private final Command autonMoveBack = new DriveDistance(drivetrain, 10, -0.5);
 
     new JoystickButton(operatorStick, Constants.Lower).whileTrue(rotateDown);
 
+    new JoystickButton(leftStick, Constants.BrakeRobot).onTrue(brakeRobot);
+
+    new JoystickButton(leftStick, Constants.BrakeRobot).onFalse(stopBrakeRobot);
+
      
     new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(rotateArmHigh);
     
@@ -272,6 +286,8 @@ private final Command autonMoveBack = new DriveDistance(drivetrain, 10, -0.5);
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autonScoreLowCommand; 
+    //return autonExtend.andThen(autonRotateHigh).andThen(autonOpenClawScoreLow).andThen(autonClaw2).andThen(autonRotateReturn).andThen(autonReturnExtend).andThen(autonMoveBack); 
+    //return autonMoveBackSpeed.andThen(autonMoveForwardSpeed).andThen(autonMoveBack);
+    return autonLowerArmMiddle.andThen(autonClaw2).andThen(autonMoveBack);
   }
 }

@@ -23,10 +23,10 @@ public class ExtendArm extends CommandBase{
     @Override 
     public void execute(){
         if (extension.getExtensionAveragePosition()>position+1){
-            extension.extendArm(0.3);
+            extension.extendArm(-0.3);
         }
         else if (extension.getExtensionAveragePosition()<position-1){
-            extension.extendArm(-0.3);
+            extension.extendArm(0.3);
         }
         else{
             extension.extendArm(0);
@@ -42,33 +42,15 @@ public class ExtendArm extends CommandBase{
     //Returns true when the command should end
     @Override
     public boolean isFinished(){
-        /*if(position>0){
-            if (extension.getExtensionAveragePosition()>=position){
-                return true;
-            }
-            else{
-                return false;
-            }
-
-        }
-        else{
-            if (extension.getExtensionAveragePosition()<=position){
-                return true;
-            }
-            else{
-                return false;
-            }
-            
-        }*/
-        //changed to possibly be better. TBD
-        if((position>0)&&(extension.getExtensionAveragePosition()>=position)){
-            return true;
-        }
-        else if ((position<=0)&&(extension.getExtensionAveragePosition()<=position)){
-            return true;
-        }
-        else{
+        
+        if (extension.getExtensionAveragePosition()>position+1){
             return false;
+        }
+        else if (extension.getExtensionAveragePosition()<position-1){
+            return false;
+        }
+        else{
+            return true;
         }
     }
 

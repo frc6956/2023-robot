@@ -7,7 +7,7 @@ public class RotateArm extends CommandBase{
     Rotation rotation;
     double angle;
     //Subject to change
-    double maxRange=0.5;
+    double maxRange=0.04;
     //Creates a new RoateArm
 
     public RotateArm(final Rotation rotation, double newAngle){
@@ -24,13 +24,15 @@ public class RotateArm extends CommandBase{
     //Called everytime the scheduler runs while the command is scheduled
     @Override
     public void execute(){
-        if (rotation.getAveragePosition()>angle){
+        if (rotation.getAveragePosition()>angle + maxRange){
             //subject to change
-            rotation.rotate(-0.07);
+            rotation.rotate(0.1);
         }
-        else if (rotation.getAveragePosition()<angle){
+        else if (rotation.getAveragePosition()<angle - maxRange){
             //subject to change
-            rotation.rotate(0.07);
+            rotation.rotate(-0.1);
+        } else {
+            rotation.rotate(0);
         }
     }
 
@@ -41,14 +43,15 @@ public class RotateArm extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        if(angle >= 0 && rotation.getAveragePosition()>=angle){
-            return true;
-        }
-        else if (angle<=0 && rotation.getAverageArmAngle()<=angle){
-            return true;
-        }
-        else{
+        if (rotation.getAveragePosition()>angle + maxRange){
+  
             return false;
+        }
+        else if (rotation.getAveragePosition()<angle - maxRange){
+          
+            return false;
+        } else {
+            return true;
         }
     }
 }
