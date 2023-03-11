@@ -9,7 +9,7 @@ public class ExtendArmHigh extends ExtendArm{
     private Extension extension;
     //creates a new ExtendArmHigh
     public ExtendArmHigh(final Extension extension){
-        super(extension, 114);
+        super(extension, 149);
 
         addRequirements(extension);
         this.extension=extension;

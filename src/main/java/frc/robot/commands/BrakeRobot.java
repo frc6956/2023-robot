@@ -3,10 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Drivetrain;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -15,7 +14,7 @@ public class BrakeRobot extends InstantCommand {
   Drivetrain drivetrain;
   public BrakeRobot(Drivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.drivetrain=drivetrain;
+    this.drivetrain = drivetrain;
   }
 
   // Called when the command is initially scheduled.

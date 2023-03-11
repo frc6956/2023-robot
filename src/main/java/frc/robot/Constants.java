@@ -45,7 +45,7 @@ public final class Constants {
 
   //Subject to later change
   public static final double rotationSpeed = 0.1;
-  public static final double maxExtensionPosition = 200;
+  public static final double maxExtensionPosition = 147;
 
 
  //joystick buttons

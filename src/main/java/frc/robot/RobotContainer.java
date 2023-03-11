@@ -65,8 +65,10 @@ public class RobotContainer {
 
 //drivetrain commands
   private final Command tankDrive = new TankDrive(drivetrain, leftStick, rightStick);
-  private final Command brakeRobot = new BrakeRobot(drivetrain);
+  private final Command holdRobot = new HoldRobot(drivetrain, leds);
   private final Command stopBrakeRobot = new StopBrakeRobot(drivetrain);
+  private final Command brakeRobot = new BrakeRobot(drivetrain);
+  private final Command balance = new Balance(drivetrain, m_gyro);
 
   // private final Command tankDriveForward = new RunCommand(
   //   () -> drivetrain.tankDrive(-0.5,-0.5), drivetrain);
@@ -145,13 +147,20 @@ public class RobotContainer {
   
   
   
-  private final Command raiseHighCone = new RotateArmHigh(rotation).alongWith(new ExtendArmHigh(extension));
+  private final Command raiseHighCone = new RotateArmHigh(rotation).withTimeout(5);
+  private final Command extendHighCone = new ExtendArmHigh(extension).withTimeout(5);
+  private final Command openHighCone = new InstantCommand(() -> claw.openClaw(), claw); 
   private final Command scoreHighCone = new RotateArmHigh(rotation).alongWith(new ExtendArmHigh(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 
-  //private final Command raiseMiddleCone = rotateArmMiddle.alongWith(extendArmMiddle);
-  private final Command raiseMiddleCone = new RotateArmMiddle(rotation).alongWith(new ExtendArmMiddle(extension));
-  //private final Command scoreMiddleCone = raiseMiddleCone.andThen(clawOpen);
-  private final Command scoreMiddleCone = new RotateArmMiddle(rotation).alongWith(new ExtendArmMiddle(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
+  private final Command scoreHighCone2 = extendArmHigh.andThen(raiseHighCone).andThen(openHighCone);
+
+ 
+  private final Command raiseMiddleCone = new RotateArmMiddle(rotation).withTimeout(3);
+  private final Command extendMiddleCone = new RotateArmMiddle(rotation).withTimeout(3);
+  private final Command openMiddleCone = new InstantCommand(() -> claw.openClaw(), claw); 
+
+  private final Command scoreMiddleCone = extendArmMiddle.andThen(raiseMiddleCone).andThen(openMiddleCone);
+  //private final Command scoreMiddleCone = new RotateArmMiddle(rotation).alongWith(new ExtendArmMiddle(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 
   //private final Command raiseLowCone = rotateArmLow.alongWith(extendArmLow);
   private final Command raiseLowCone = new RotateArmLow(rotation).alongWith(new ExtendArmLow(extension));
@@ -243,13 +252,11 @@ private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTi
 
     new JoystickButton(operatorStick, Constants.Lower).whileTrue(rotateDown);
 
-    new JoystickButton(leftStick, Constants.BrakeRobot).onTrue(brakeRobot);
-
-    new JoystickButton(leftStick, Constants.BrakeRobot).onFalse(stopBrakeRobot);
-
      
-    new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(rotateArmHigh);
-    
+    new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(scoreHighCone2);
+
+    new JoystickButton(operatorStick, Constants.ScoreMiddleCone).whileTrue(scoreMiddleCone);
+    /* 
     //new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(rotateArmHigh.alongWith(extendArmHigh).andThen(clawOpen));
 
     //new JoystickButton(operatorStick, Constants.ScoreHighCube).whileTrue(testHighCone);
@@ -259,9 +266,17 @@ private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTi
     new JoystickButton(operatorStick, Constants.ScoreMiddleCube).whileTrue(scoreMiddleCone);
 
     new JoystickButton(operatorStick, Constants.ScoreLower).whileTrue(scoreLowCone);
-    
+    */
 
     new JoystickButton(operatorStick, Constants.ExtendArm).whileTrue(armExtend);
+
+    new JoystickButton(leftStick, 1).whileTrue(balance);
+
+    new JoystickButton(rightStick, 1).whileTrue(holdRobot);
+
+    new JoystickButton(leftStick, 16).onTrue(stopBrakeRobot);
+
+    new JoystickButton(rightStick, 16).onTrue(brakeRobot);
 
     //new JoystickButton(leftStick, Constants.RunForward).whileTrue(tankDriveForward);
 
@@ -287,8 +302,8 @@ private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTi
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //return autonExtend.andThen(autonRotateHigh).andThen(autonOpenClawScoreLow).andThen(autonClaw2).andThen(autonRotateReturn).andThen(autonReturnExtend).andThen(autonMoveBack); 
+    return autonExtend.andThen(autonRotateHigh).andThen(autonOpenClawScoreLow).andThen(autonClaw2).andThen(autonRotateReturn).andThen(autonReturnExtend);//.andThen(autonMoveBack); 
     //return autonMoveBackSpeed.andThen(autonMoveForwardSpeed).andThen(autonMoveBack);
-    return autonLowerArmMiddle.andThen(autonClaw2).andThen(new WaitCommand(0.5)).andThen(autonMoveBack);
+    //return autonLowerArmMiddle.andThen(autonClaw2).andThen(new WaitCommand(0.5)).andThen(autonMoveBack);
   }
 }

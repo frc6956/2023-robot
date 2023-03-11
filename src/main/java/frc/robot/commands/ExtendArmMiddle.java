@@ -7,7 +7,7 @@ public class ExtendArmMiddle extends ExtendArm{
     private Extension extension;
 
     public ExtendArmMiddle(final Extension extension){
-        super(extension,110);
+        super(extension,66);
         addRequirements(extension);
         this.extension=extension;
         //Use addRequirements() here to declare subsystem dependencies

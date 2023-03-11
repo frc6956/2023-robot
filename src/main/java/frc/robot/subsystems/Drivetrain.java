@@ -67,8 +67,8 @@ public class Drivetrain extends SubsystemBase {
 
     this.m_gyro = m_gyro;
 //**********************NEED TO FIGURE OUT CONVERSION FACTORS***********************
-    double encoderVelocityConversionFactor = ((6*Math.PI*0.254)/60)/8.45;
-    double encoderPositionConversionFactor = ((6*Math.PI*0.254))/8.45;
+    double encoderVelocityConversionFactor = ((6*Math.PI*0.0254)/60)/8.45;
+    double encoderPositionConversionFactor = ((6*Math.PI*0.0254))/8.45;
     drivetrainEncoderL1.setPositionConversionFactor(encoderPositionConversionFactor);
     drivetrainEncoderR1.setPositionConversionFactor(encoderPositionConversionFactor);
     drivetrainEncoderL1.setVelocityConversionFactor(encoderVelocityConversionFactor);
@@ -165,6 +165,7 @@ public class Drivetrain extends SubsystemBase {
     drivetrainMotorR2.setIdleMode(IdleMode.kCoast);
   }
 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -185,6 +186,10 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Drivetrain Left Encoder Distance", getDistance(drivetrainEncoderL1));
     SmartDashboard.putNumber("Drivetrain Right Encoder Distance", getDistance(drivetrainEncoderR1));
     SmartDashboard.putNumber("Drive Position", getPosition());
+    SmartDashboard.putNumber("Gyro Yaw", m_gyro.getYaw());
+    SmartDashboard.putNumber("Gyro Pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
+
     
   }
 }

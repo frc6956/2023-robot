@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.subsystems.LEDs;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -21,6 +22,7 @@ public class LEDManager extends CommandBase {
   public LEDManager(final LEDs led) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.led = led;
+
     addRequirements(led);
   }
 
@@ -39,7 +41,7 @@ public class LEDManager extends CommandBase {
       } else {
 
         if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Yellow)){ 
-          led.setAllRGBColor(led.yellow);
+          led.setAllRGBColor(led.orange);
         }
         else if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Purple)){
           led.setAllRGBColor(led.purple);

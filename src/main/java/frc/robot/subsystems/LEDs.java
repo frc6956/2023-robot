@@ -21,10 +21,14 @@ public class LEDs extends SubsystemBase {
   public static int[] pink = {255, 0, 70};
   public static int[] purple = {180, 0, 255};
   public static int[] yellow = {255, 140, 0};
+  public static int[] orange = {165, 165, 0};
 
 
   double m_rainbowFirstPixelHue = 0;
   double m_rainbowFirstPixelHue2 = 180;
+
+  double m_pulseFirstPixelHue = 10;
+
 
   /** Creates a new LEDs. */
   public LEDs() {
@@ -124,6 +128,65 @@ public class LEDs extends SubsystemBase {
 
     m_led.setData(m_ledBuffer);
   }
+
+  public void pulseColor(double distanceError){ // runs LEDs in which the shooter rpm controls how fast it changes color
+    double hueSpeed;
+    int hueSpeedMin = 1;
+    int hueSpeedMax = 9;
+  
+    //normalize the rpm and convert a range of 0-6000 to a range of 1-6
+    hueSpeed = (distanceError)*(hueSpeedMax - hueSpeedMin) + hueSpeedMin;
+
+    if (distanceError < 0){
+      // For every pixel
+      for (var i = m_ledBuffer.getLength(); i > 0; i--) {
+        
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final int hue = (int)(m_pulseFirstPixelHue + (i * 65 / m_ledBuffer.getLength())) % 25 + 40; // hue is red to green
+        // Set the value
+        if (i % 2 == 0){
+          m_ledBuffer.setHSV(i, hue, 255, 128);
+        } else {
+          m_ledBuffer.setHSV(i, hue, 255, 255);
+      }
+    } // if distanceError < 0
+    } else if (distanceError > 0){
+      // For every pixel
+      for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final int hue = (int)(m_pulseFirstPixelHue + (i * 65 / m_ledBuffer.getLength())) % 25 + 40; // hue is red to green
+        // Set the value
+        if (i % 2 == 0){
+          m_ledBuffer.setHSV(i, hue, 255, 128);
+        } else {
+          m_ledBuffer.setHSV(i, hue, 255, 255);
+        } 
+      } // if distanceError > 0
+    }else { 
+      // For every pixel
+      for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final int hue = (int)(m_pulseFirstPixelHue + (i * 65 / m_ledBuffer.getLength())) % 25 + 40; // hue is red to green
+        // Set the value
+        if (i % 2 == 0){
+          m_ledBuffer.setRGB(i, (int)(green[0] *.1), (int)(green[1]*.1), (int)(green[2]*.1));
+        } else {
+          m_ledBuffer.setRGB(i, green[0], green[1], green[2]);
+        }
+      }
+    }
+
+    
+    // Increase by to make the rainbow "move"
+    m_pulseFirstPixelHue += hueSpeed; //the hue changes color slower or quicker depending on the rpm of the shooter
+    // Check bounds
+    m_pulseFirstPixelHue %= 25;
+    }
 
   @Override
   public void periodic() {
