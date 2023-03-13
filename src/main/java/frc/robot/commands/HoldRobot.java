@@ -41,7 +41,7 @@ public class HoldRobot extends CommandBase {
 
     drivetrain.tankDrive(output, output);
 
-    leds.pulseColor(error);
+    //leds.pulseColor(error);
 
   }
 

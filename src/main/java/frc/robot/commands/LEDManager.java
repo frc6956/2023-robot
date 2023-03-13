@@ -41,7 +41,7 @@ public class LEDManager extends CommandBase {
       } else {
 
         if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Yellow)){ 
-          led.setAllRGBColor(led.orange);
+          led.setAllRGBColor(led.yellow);
         }
         else if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Purple)){
           led.setAllRGBColor(led.purple);

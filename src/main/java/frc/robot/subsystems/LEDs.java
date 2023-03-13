@@ -20,7 +20,7 @@ public class LEDs extends SubsystemBase {
   public static int[] gold = {50, 20, 0};
   public static int[] pink = {255, 0, 70};
   public static int[] purple = {180, 0, 255};
-  public static int[] yellow = {255, 140, 0};
+  public static int[] yellow = {255, 70, 0};
   public static int[] orange = {165, 165, 0};
 
 
@@ -171,7 +171,7 @@ public class LEDs extends SubsystemBase {
         
         // Calculate the hue - hue is easier for rainbows because the color
         // shape is a circle so only one value needs to precess
-        final int hue = (int)(m_pulseFirstPixelHue + (i * 65 / m_ledBuffer.getLength())) % 25 + 40; // hue is red to green
+        
         // Set the value
         if (i % 2 == 0){
           m_ledBuffer.setRGB(i, (int)(green[0] *.1), (int)(green[1]*.1), (int)(green[2]*.1));

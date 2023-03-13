@@ -3,12 +3,12 @@ package frc.robot.commands;
 //import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Rotation;
 
-public class RotateArmMiddle extends RotateArm{
+public class RotateArmMiddle extends RotateArm2{
     Rotation rotation;
     public RotateArmMiddle(Rotation rotation){
         //Use addRequirements() here to declare subsystem dependencies
         //Subject to change
-        super(rotation, 32);
+        super(rotation, 45);
         addRequirements(rotation);
 
         this.rotation=rotation;

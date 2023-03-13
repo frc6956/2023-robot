@@ -99,11 +99,6 @@ public class RobotContainer {
     () -> extension.stopArm(), extension);
   private final Command armReset = new RunCommand(
     () -> extension.resetPosition(), extension);
-
-  private final Command extendArmHigh = new ExtendArmHigh(extension);
-  private final Command extendArmMiddle = new ExtendArmMiddle(extension);
-  private final Command extendArmLow = new ExtendArmLow(extension);
-  private final Command extendArmSuperHigh = new ExtendArmSuperHigh(extension);
   
 
   //rotation commands
@@ -115,15 +110,7 @@ public class RobotContainer {
     () -> rotation.stopRotate(), rotation);
   private final Command armRotateReset = new RunCommand(
     () -> rotation.resetPosition(), rotation);
-  private final Command armAngleSet = new RunCommand(
-    //Subject to change
-    //Potential to create command for this down the road
-    () -> rotation.setArmAngle(10), rotation);
-  
-    private final Command rotateArmSuperHigh = new RotateArmSuperHigh(rotation);
-    private final Command rotateArmHigh = new RotateArmHigh(rotation);
-    private final Command rotateArmMiddle = new RotateArmMiddle(rotation);
-    private final Command rotateArmLow = new RotateArmLow(rotation);
+
 
   
 
@@ -147,25 +134,27 @@ public class RobotContainer {
   
   
   
-  private final Command raiseHighCone = new RotateArmHigh(rotation).withTimeout(5);
-  private final Command extendHighCone = new ExtendArmHigh(extension).withTimeout(5);
+  private final Command raiseHighCone = new RotateArm(rotation, Constants.RotateHigh).withTimeout(5);
+  private final Command extendHighCone = new ExtendArm(extension, Constants.ExtendHigh).withTimeout(5);
   private final Command openHighCone = new InstantCommand(() -> claw.openClaw(), claw); 
-  private final Command scoreHighCone = new RotateArmHigh(rotation).alongWith(new ExtendArmHigh(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
+  private final Command scoreHighCone = new RotateArm(rotation, Constants.RotateHigh).alongWith(new ExtendArm(extension, Constants.ExtendHigh)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 
-  private final Command scoreHighCone2 = extendArmHigh.andThen(raiseHighCone).andThen(openHighCone);
+  private final Command scoreHighCone2 = extendHighCone.andThen(raiseHighCone).andThen(openHighCone);
 
  
-  private final Command raiseMiddleCone = new RotateArmMiddle(rotation).withTimeout(3);
-  private final Command extendMiddleCone = new RotateArmMiddle(rotation).withTimeout(3);
+  private final Command raiseMiddleCone = new RotateArm(rotation, Constants.RotateMiddle);
+  private final Command extendMiddleCone = new ExtendArm(extension, Constants.ExtendMiddle);
   private final Command openMiddleCone = new InstantCommand(() -> claw.openClaw(), claw); 
+  private final Command resetRaiseMiddleCone = new RotateArm(rotation, Constants.RotateReset);
 
-  private final Command scoreMiddleCone = extendArmMiddle.andThen(raiseMiddleCone).andThen(openMiddleCone);
-  //private final Command scoreMiddleCone = new RotateArmMiddle(rotation).alongWith(new ExtendArmMiddle(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
+  private final Command scoreMiddleCone = extendMiddleCone.andThen(raiseMiddleCone).andThen(openMiddleCone);
+  
 
-  //private final Command raiseLowCone = rotateArmLow.alongWith(extendArmLow);
-  private final Command raiseLowCone = new RotateArmLow(rotation).alongWith(new ExtendArmLow(extension));
-  //private final Command scoreLowCone = raiseLowCone.andThen(clawOpen);
-  private final Command scoreLowCone = new RotateArmLow(rotation).alongWith(new ExtendArmLow(extension)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
+  private final Command raiseLowCone = new RotateArm(rotation, Constants.RotateLow);
+  private final Command extendLowCone = new ExtendArm(extension, Constants.ExtendLow);
+  private final Command openLowCone = new InstantCommand(() -> claw.openClaw(), claw);
+
+  private final Command scoreLowCone = extendLowCone.andThen(raiseLowCone).andThen(openLowCone);
 
   /* 
   //Human player pickup
@@ -183,20 +172,20 @@ public class RobotContainer {
 
 //Autonomous Commands
 
-private final Command autonLowerArCommand = new RotateArmLow(rotation);//.andThen(new ExtendArmHigh(extension)).alongWith(new RotateArmHigh(rotation)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
+private final Command autonLowerArCommand = new RotateArm(rotation, Constants.RotateLow);
 private final Command autonOpenClawScoreLow = new InstantCommand(() -> claw.openClaw(), claw);
-private final Command autonScoreLowCommand = new RotateArmLow(rotation).andThen(new InstantCommand(() -> claw.openClaw(), claw));
+private final Command autonScoreLowCommand = new RotateArm(rotation, Constants.RotateLow).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 private final Command autonMoveBack = new DriveDistance(drivetrain, -45, 0.42);
-private final Command autonExtendOpenBack = new ExtendArmHigh(extension).andThen(() -> claw.openClaw(), claw).andThen(new RotateArmHigh(rotation));
-private final Command autonExtendOpen = new ExtendArmHigh(extension).andThen(() -> claw.openClaw(), claw);
-private final Command autonExtend = new ExtendArmHigh(extension).withTimeout(4);
-private final Command autonRotateHigh = new RotateArmHigh(rotation).withTimeout(3);
-private final Command autonRotateReturn = new RotateArmSuperHigh(rotation).withTimeout(2.2);
-private final Command autonReturnExtend = new ExtendArmLow(extension).withTimeout(1.5);
+private final Command autonExtendOpenBack = new ExtendArm(extension, Constants.ExtendHigh).andThen(() -> claw.openClaw(), claw).andThen(new RotateArm(rotation, Constants.RotateHigh));
+private final Command autonExtendOpen = new ExtendArm(extension, Constants.ExtendHigh).andThen(() -> claw.openClaw(), claw);
+private final Command autonExtend = new ExtendArm(extension, Constants.ExtendHigh).withTimeout(4);
+private final Command autonRotateHigh = new RotateArm(rotation, Constants.RotateHigh).withTimeout(3);
+private final Command autonRotateReturn = new RotateArm(rotation, Constants.RotateReset).withTimeout(2.2);
+private final Command autonReturnExtend = new ExtendArm(extension, Constants.ExtendLow).withTimeout(1.5);
 private final Command autonClaw2 = new InstantCommand(() -> claw.openClaw(), claw);;
 private final Command autonMoveBackSpeed = new DriveDistance(drivetrain, -4, 0.3);
 private final Command autonMoveForwardSpeed = new DriveDistance(drivetrain, 4, 0.3);
-private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTimeout(1);
+private final Command autonLowerArmMiddle = new RotateArm(rotation, Constants.RotateMiddle).withTimeout(1);
 
 
 
@@ -274,9 +263,9 @@ private final Command autonLowerArmMiddle = new RotateArmMiddle(rotation).withTi
 
     new JoystickButton(rightStick, 1).whileTrue(holdRobot);
 
-    new JoystickButton(leftStick, 16).onTrue(stopBrakeRobot);
+    new JoystickButton(leftStick, 14).onTrue(stopBrakeRobot);
 
-    new JoystickButton(rightStick, 16).onTrue(brakeRobot);
+    new JoystickButton(rightStick, 14).onTrue(brakeRobot);
 
     //new JoystickButton(leftStick, Constants.RunForward).whileTrue(tankDriveForward);
 
