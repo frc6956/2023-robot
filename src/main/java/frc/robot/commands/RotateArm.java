@@ -5,7 +5,7 @@ import frc.robot.subsystems.Rotation;
 
 public class RotateArm extends CommandBase{
     Rotation rotation;
-    double angle;
+    double targetAngle;
     //Subject to change
     double maxRange=0.04;
     //Creates a new RoateArm
@@ -14,7 +14,7 @@ public class RotateArm extends CommandBase{
         //Use addRequirements() here to declare subsystem dependencies
         addRequirements(rotation);
         this.rotation=rotation;
-        angle=newAngle;
+        targetAngle=newAngle;
     }
 
     //Called when the command is initially scheduled
@@ -24,16 +24,15 @@ public class RotateArm extends CommandBase{
     //Called everytime the scheduler runs while the command is scheduled
     @Override
     public void execute(){
-        if (rotation.getAverageArmAngle()>angle + maxRange){
-            //subject to change
-            rotation.rotate(0.1);
-        }
-        else if (rotation.getAverageArmAngle()<angle - maxRange){
-            //subject to change
-            rotation.rotate(-0.1);
-        } else {
-            rotation.rotate(0);
-        }
+        double kP = 0.1;
+        double error = rotation.getAverageArmAngle() - targetAngle;
+        
+        double output = error * kP;
+    
+        output = Math.copySign(Math.min(0.15, Math.abs(output)), output);
+        if (Math.abs(error) < 0.2) output = 0;
+    
+        rotation.rotate(output);
     }
 
     @Override
@@ -43,15 +42,6 @@ public class RotateArm extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        if (rotation.getAverageArmAngle()>angle + maxRange){
-  
-            return false;
-        }
-        else if (rotation.getAverageArmAngle()<angle - maxRange){
-          
-            return false;
-        } else {
-            return true;
-        }
+        return false;
     }
 }

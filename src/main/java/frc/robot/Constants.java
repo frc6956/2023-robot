@@ -76,4 +76,17 @@ public final class Constants {
   public static final int RunForward = 1;
 
   public static final int BrakeRobot = 16;
+
+
+  /// extension and rotation constants
+
+  public static final int RotateHigh = 32;
+  public static final int RotateMiddle = 45;
+  public static final int RotateLow = 100;
+  public static final int RotateReset = 0;
+
+  public static final int ExtendHigh = 149;
+  public static final int ExtendMiddle = 66;
+  public static final int ExtendLow = 0;
+  public static final int ExtendReset = 0;
 }

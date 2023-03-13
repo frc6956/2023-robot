@@ -6,10 +6,11 @@ import frc.robot.subsystems.Extension;
 
 public class ExtendArm extends CommandBase{
     Extension extension;
-    double position;
+    double targetPosition;
+    boolean finished;
 
     public ExtendArm(final Extension extension, final double newPosition){
-        position=newPosition;
+        targetPosition=newPosition;
         this.extension=extension;
 
     }
@@ -17,41 +18,35 @@ public class ExtendArm extends CommandBase{
 
 
     @Override
-    public void initialize(){}
+    public void initialize(){
+        finished = false;
+    }
 
     //Xalled evvery time the scheduler tuns while th ecommand is scheduled
     @Override 
     public void execute(){
-        if (extension.getExtensionAveragePosition()>position+1){
-            extension.extendArm(-0.3);
-        }
-        else if (extension.getExtensionAveragePosition()<position-1){
-            extension.extendArm(0.3);
-        }
-        else{
-            extension.extendArm(0);
-        }
+        double kP = 0.05;
+        double error =  targetPosition - extension.getExtensionAveragePosition();
+        
+        double output = error * kP;
+    
+        output = Math.copySign(Math.min(0.4, Math.abs(output)), output);
+        if (Math.abs(error) < 1) output = 0; finished = true;
+    
+        extension.extendArm(output);
     }
 
     //Called once the command ends or is interrupted
     @Override
     public void end(boolean interrupted){
-        extension.extendArm(0);
+        extension.stopArm();
     }
 
     //Returns true when the command should end
     @Override
     public boolean isFinished(){
         
-        if (extension.getExtensionAveragePosition()>position+1){
-            return false;
-        }
-        else if (extension.getExtensionAveragePosition()<position-1){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return finished;
     }
 
 }
