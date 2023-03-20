@@ -25,7 +25,7 @@ public class Claw extends SubsystemBase {
   /** Creates a new Claw. */
   public Claw() {
 
-    phCompressor.enableAnalog(110, 120);
+    phCompressor.enableAnalog(80, 120);
 
     open = false;
 

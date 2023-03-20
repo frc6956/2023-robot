@@ -5,8 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
+
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.LEDs;
@@ -19,9 +24,13 @@ public class LEDManager extends CommandBase {
   /** Creates a new LEDManager. */
 
   private LEDs led;
-  public LEDManager(final LEDs led) {
+  private WPI_PigeonIMU m_gyro;
+  private Joystick operatorJoystick;
+  public LEDManager(final LEDs led, WPI_PigeonIMU m_gyro, Joystick operatorJoystick) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.led = led;
+    this.m_gyro = m_gyro;
+    this.operatorJoystick = operatorJoystick;
 
     addRequirements(led);
   }
@@ -36,8 +45,8 @@ public class LEDManager extends CommandBase {
     if (DriverStation.isDSAttached()){
       
       if (DriverStation.isDisabled()){
-        //led.rainbow();
-        led.dimRainbow();
+        led.dimRainbow(0.05);
+        //led.emergency();
       } else {
 
         if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Yellow)){ 
@@ -46,8 +55,10 @@ public class LEDManager extends CommandBase {
         else if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Purple)){
           led.setAllRGBColor(led.purple);
          
-        } else if (DriverStation.isAutonomous()){
-          System.out.println(DriverStation.getAlliance());
+        } else if ((Math.abs(m_gyro.getRoll()) > 50) || (Math.abs(m_gyro.getPitch()) > 50)){
+          led.emergency();
+        }else if (DriverStation.isAutonomous()){
+         
           if (DriverStation.getAlliance() == Alliance.Blue){
             led.setAllRGBColor(led.blue);
           } else if (DriverStation.getAlliance() == Alliance.Red){
@@ -55,11 +66,15 @@ public class LEDManager extends CommandBase {
           } else {
             led.setAllRGBColor(led.green);
           }
-        } // end of setting LED colors in Autonomous
+          // end of setting LED colors in Autonomous
+        } else if (operatorJoystick.getThrottle() < 0.8){
+          led.dimRainbow((operatorJoystick.getThrottle())/5);
+        } 
 
         else { // if the robot is is enabled
           
           led.setAllRGBColor(led.green);
+          //led.celebrate();
         }
 
       } // end of if robot is disabled/enabled

@@ -47,7 +47,7 @@ public class Extension extends SubsystemBase {
     extensionMotorSideR1.setIdleMode(IdleMode.kBrake);
     
     resetPosition();
-    
+    SmartDashboard.putData(this);
   }
 
   public void extendArm(double speed){
@@ -93,7 +93,11 @@ public class Extension extends SubsystemBase {
     double position = extensionEncoderR.getPosition();
     return position;
   }
+
+  public double getAverageCurrent(){
+    return (extensionMotorSideL1.getOutputCurrent() + extensionMotorSideR1.getOutputCurrent()) / 2;
   //We need to********************
+  }
   //check which*******************
   //one is inverted***************
   public double getExtensionAveragePosition(){
@@ -108,5 +112,6 @@ public class Extension extends SubsystemBase {
     SmartDashboard.putNumber("Left Extension Encoder Position", getLeftExtensionEncoderPosition());
     SmartDashboard.putNumber("Right Extension Encoder Position", getRightExtensionEncoderPosition());
     SmartDashboard.putNumber("Average Extension Encoder Position", getExtensionAveragePosition());
+    //SmartDashboard.putNumber("Extension Average Current", getAverageCurrent());
   }
 }

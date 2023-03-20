@@ -52,6 +52,8 @@ public class Vision extends SubsystemBase {
   double differenceAngleY = ty.getDouble(0.0);
   double totalAngleY = fixedVisionAngle+differenceAngleY;
   double distance;
+  double aprilID;
+
   public void calculateDistance() { // finds the distance based off of the fixed angle and heights
     differenceAngleY = ty.getDouble(0.0);
     totalAngleY = fixedVisionAngle+differenceAngleY;
@@ -133,7 +135,6 @@ public class Vision extends SubsystemBase {
   }
 
   public double getAprilID(){
-    double aprilID = tid.getDouble(0.0);
     return aprilID;
   }
 
@@ -146,6 +147,12 @@ public class Vision extends SubsystemBase {
      double area = ta.getDouble(0.0);
      
      double[] robotPose = botpose.getDoubleArray(new double[6]);
+
+
+    if (tid.getDouble(0.0) >= 1 && tid.getDouble(0.0) <= 8){
+      aprilID = tid.getDouble(0.0);
+    }
+
  
      calculateDistance();
  

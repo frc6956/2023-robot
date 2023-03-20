@@ -54,15 +54,17 @@ public final class Constants {
   public static final int ToggleClaw = 2;
   public static final int ClawArmReturn = 3;
   //public static final int AprilButton = 5;
-  public static final int ExtendArm = 11;
+  public static final int ExtendArm = 12;
 
-  public static final int ScoreHighCone = 8;
-  public static final int ScoreHighCube = 7;
+  public static final int ScoreHighCone = 9;
+  //public static final int ScoreHighCube = 8;
 
   public static final int ScoreMiddleCone = 10;
-  public static final int ScoreMiddleCube = 9;
+  //public static final int ScoreMiddleCube = 8;
 
-  public static final int ScoreLower = 12;
+  //public static final int ScoreLower = 8;
+
+  public static final int playerGrab = 8;
  
 
   public static final int Lower = 4;
@@ -80,13 +82,15 @@ public final class Constants {
 
   /// extension and rotation constants
 
-  public static final int RotateHigh = 32;
+  public static final int RotateHigh = 28;
   public static final int RotateMiddle = 45;
   public static final int RotateLow = 100;
+  public static final int RotatePlayer = 20;
   public static final int RotateReset = 0;
 
-  public static final int ExtendHigh = 149;
+  public static final int ExtendHigh = 146;
   public static final int ExtendMiddle = 66;
   public static final int ExtendLow = 0;
+  public static final int ExtendPlayer = 60;
   public static final int ExtendReset = 0;
 }

@@ -8,6 +8,7 @@ public class RotateArm extends CommandBase{
     double targetAngle;
     //Subject to change
     double maxRange=0.04;
+    boolean finished = false;
     //Creates a new RoateArm
 
     public RotateArm(final Rotation rotation, double newAngle){
@@ -19,18 +20,26 @@ public class RotateArm extends CommandBase{
 
     //Called when the command is initially scheduled
     @Override
-    public void initialize(){}
+    public void initialize(){
+        finished = false;
+    }
+
 
     //Called everytime the scheduler runs while the command is scheduled
     @Override
     public void execute(){
-        double kP = 0.1;
+        double kP = 0.04;
         double error = rotation.getAverageArmAngle() - targetAngle;
         
         double output = error * kP;
     
-        output = Math.copySign(Math.min(0.15, Math.abs(output)), output);
-        if (Math.abs(error) < 0.2) output = 0;
+        output = Math.copySign(Math.min(0.2, Math.abs(output)), output);
+        
+        if (Math.abs(error) < 0.2){
+            output = 0;
+            finished = true;
+        }
+
     
         rotation.rotate(output);
     }
@@ -42,6 +51,6 @@ public class RotateArm extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        return false;
+        return finished;
     }
 }

@@ -10,14 +10,12 @@ import frc.robot.subsystems.LEDs;
 
 public class HoldRobot extends CommandBase {
   Drivetrain drivetrain;
-  LEDs leds;
   double targetPosition;
   /** Creates a new BrakeRobot. */
-  public HoldRobot(Drivetrain drivetrain, LEDs leds) {
+  public HoldRobot(Drivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
-    this.leds = leds;
-    addRequirements(drivetrain, leds);
+    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
@@ -41,7 +39,7 @@ public class HoldRobot extends CommandBase {
 
     drivetrain.tankDrive(output, output);
 
-    //leds.pulseColor(error);
+    
 
   }
 

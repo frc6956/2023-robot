@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -65,7 +66,7 @@ public class RobotContainer {
 
 //drivetrain commands
   private final Command tankDrive = new TankDrive(drivetrain, leftStick, rightStick);
-  private final Command holdRobot = new HoldRobot(drivetrain, leds);
+  private final Command holdRobot = new HoldRobot(drivetrain);
   private final Command stopBrakeRobot = new StopBrakeRobot(drivetrain);
   private final Command brakeRobot = new BrakeRobot(drivetrain);
   private final Command balance = new Balance(drivetrain, m_gyro);
@@ -116,7 +117,7 @@ public class RobotContainer {
 
   // LED commands
 
-  private final Command LEDManager = new LEDManager(leds);
+  private final Command LEDManager = new LEDManager(leds, m_gyro, operatorStick);
 
 
   //Vision commands
@@ -126,28 +127,25 @@ public class RobotContainer {
   private final Command visionApril = new RunCommand(() -> vision.setAprilTags(), vision);
   private final Command visionReflective = new RunCommand(() -> vision.setVisionTarget(), vision);
 
-  //Auton commands?
-
-
 
   //Scoring Commands
   
   
   
-  private final Command raiseHighCone = new RotateArm(rotation, Constants.RotateHigh).withTimeout(5);
-  private final Command extendHighCone = new ExtendArm(extension, Constants.ExtendHigh).withTimeout(5);
+  private final Command raiseHighCone = new RotateArm(rotation, Constants.RotateHigh);
+  private final Command extendHighCone = new ExtendArm(extension, Constants.ExtendHigh);
   private final Command openHighCone = new InstantCommand(() -> claw.openClaw(), claw); 
-  private final Command scoreHighCone = new RotateArm(rotation, Constants.RotateHigh).alongWith(new ExtendArm(extension, Constants.ExtendHigh)).andThen(new InstantCommand(() -> claw.openClaw(), claw));
 
-  private final Command scoreHighCone2 = extendHighCone.andThen(raiseHighCone).andThen(openHighCone);
+  private final Command scoreHighCone = extendHighCone.andThen(raiseHighCone);//.andThen(openHighCone);
 
  
   private final Command raiseMiddleCone = new RotateArm(rotation, Constants.RotateMiddle);
   private final Command extendMiddleCone = new ExtendArm(extension, Constants.ExtendMiddle);
   private final Command openMiddleCone = new InstantCommand(() -> claw.openClaw(), claw); 
   private final Command resetRaiseMiddleCone = new RotateArm(rotation, Constants.RotateReset);
+  private final Command resetExtendMiddleCone = new ExtendArm(extension, Constants.ExtendReset);
 
-  private final Command scoreMiddleCone = extendMiddleCone.andThen(raiseMiddleCone).andThen(openMiddleCone);
+  private final Command scoreMiddleCone = extendMiddleCone.andThen(raiseMiddleCone);//.andThen(openMiddleCone).andThen(resetRaiseMiddleCone).andThen(resetExtendMiddleCone);
   
 
   private final Command raiseLowCone = new RotateArm(rotation, Constants.RotateLow);
@@ -155,6 +153,15 @@ public class RobotContainer {
   private final Command openLowCone = new InstantCommand(() -> claw.openClaw(), claw);
 
   private final Command scoreLowCone = extendLowCone.andThen(raiseLowCone).andThen(openLowCone);
+
+
+  private final Command raisePlayerCone = new RotateArm(rotation, Constants.RotatePlayer);
+  private final Command extendPlayerCone = new ExtendArm(extension, Constants.ExtendPlayer);
+  private final Command closePlayerCone = new InstantCommand(() -> claw.closeClaw(), claw); 
+
+  private final Command grabPlayerCone = extendPlayerCone.andThen(raisePlayerCone);//.andThen(openHighCone);
+
+
 
   /* 
   //Human player pickup
@@ -175,7 +182,7 @@ public class RobotContainer {
 private final Command autonLowerArCommand = new RotateArm(rotation, Constants.RotateLow);
 private final Command autonOpenClawScoreLow = new InstantCommand(() -> claw.openClaw(), claw);
 private final Command autonScoreLowCommand = new RotateArm(rotation, Constants.RotateLow).andThen(new InstantCommand(() -> claw.openClaw(), claw));
-private final Command autonMoveBack = new DriveDistance(drivetrain, -45, 0.42);
+private final Command autonMoveBack = new DriveDistance(drivetrain, -4, 0.4);
 private final Command autonExtendOpenBack = new ExtendArm(extension, Constants.ExtendHigh).andThen(() -> claw.openClaw(), claw).andThen(new RotateArm(rotation, Constants.RotateHigh));
 private final Command autonExtendOpen = new ExtendArm(extension, Constants.ExtendHigh).andThen(() -> claw.openClaw(), claw);
 private final Command autonExtend = new ExtendArm(extension, Constants.ExtendHigh).withTimeout(4);
@@ -186,6 +193,16 @@ private final Command autonClaw2 = new InstantCommand(() -> claw.openClaw(), cla
 private final Command autonMoveBackSpeed = new DriveDistance(drivetrain, -4, 0.3);
 private final Command autonMoveForwardSpeed = new DriveDistance(drivetrain, 4, 0.3);
 private final Command autonLowerArmMiddle = new RotateArm(rotation, Constants.RotateMiddle).withTimeout(1);
+
+//middle
+private final Command autonMoveChargeStationBack = new DriveDistance(drivetrain, -4, 0.5);
+private final Command autonMoveChargeStationForward = new DriveDistance(drivetrain, 2, 0.5);
+private final Command autonBalance = new Balance(drivetrain, m_gyro);
+private final Command autonHoldRobot = new HoldRobot(drivetrain);
+private final Command autonRaiseHigh = new RotateArm(rotation, Constants.RotateHigh);
+private final Command autonExtendHigh = new ExtendArm(extension, Constants.ExtendHigh);
+private final Command autonOpenClaw = new InstantCommand(() -> claw.openClaw(), claw);
+private final Command resetArms = new ReturnArm(extension, rotation);
 
 
 
@@ -242,9 +259,11 @@ private final Command autonLowerArmMiddle = new RotateArm(rotation, Constants.Ro
     new JoystickButton(operatorStick, Constants.Lower).whileTrue(rotateDown);
 
      
-    new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(scoreHighCone2);
+    new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(scoreHighCone);
 
     new JoystickButton(operatorStick, Constants.ScoreMiddleCone).whileTrue(scoreMiddleCone);
+
+    new JoystickButton(operatorStick, Constants.playerGrab).whileTrue(grabPlayerCone);
     /* 
     //new JoystickButton(operatorStick, Constants.ScoreHighCone).whileTrue(rotateArmHigh.alongWith(extendArmHigh).andThen(clawOpen));
 
@@ -291,8 +310,22 @@ private final Command autonLowerArmMiddle = new RotateArm(rotation, Constants.Ro
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autonExtend.andThen(autonRotateHigh).andThen(autonOpenClawScoreLow).andThen(autonClaw2).andThen(autonRotateReturn).andThen(autonReturnExtend);//.andThen(autonMoveBack); 
-    //return autonMoveBackSpeed.andThen(autonMoveForwardSpeed).andThen(autonMoveBack);
+
+    if (vision.getAprilID() == 2 || vision.getAprilID() == 7){ // if in middle and near chargestation
+      return (autonExtendHigh.alongWith(new WaitCommand(1).andThen(autonRaiseHigh))).andThen(autonOpenClaw).andThen((resetArms).alongWith(autonMoveChargeStationBack)).andThen(new WaitCommand(0.5)).andThen(autonMoveChargeStationForward).andThen(autonBalance).andThen(autonHoldRobot);
+    } else {
+      return (autonExtendHigh.alongWith(new WaitCommand(1).andThen(autonRaiseHigh))).andThen(autonOpenClaw).andThen(resetArms.alongWith(autonMoveBack));
+    }
+
+
+    //return autonExtend.andThen(autonRotateHigh).andThen(autonOpenClawScoreLow).andThen(autonClaw2).andThen(autonRotateReturn).andThen(autonReturnExtend);//.andThen(autonMoveBack); 
+
+    //score high cube then balance
+    //return (autonExtendHigh.alongWith(new WaitCommand(2).andThen(autonRaiseHigh))).andThen(autonOpenClaw).andThen((resetArms).alongWith(autonMoveChargeStationBack)).andThen(new WaitCommand(1)).andThen(autonMoveChargeStationForward).andThen(autonBalance).andThen(autonHoldRobot);
+    //return (autonExtendHigh.alongWith(autonRaiseHigh)).andThen(autonOpenClaw).andThen(resetArms);
+
     //return autonLowerArmMiddle.andThen(autonClaw2).andThen(new WaitCommand(0.5)).andThen(autonMoveBack);
+    //return autonExtendHigh.andThen(autonRaiseHigh).andThen(autonOpenClaw);
+    //return new ExtendArm(extension, Constants.ExtendHigh).andThen(new InstantCommand(() -> claw.openClaw(), claw));
   }
 }

@@ -26,8 +26,11 @@ public class LEDs extends SubsystemBase {
 
   double m_rainbowFirstPixelHue = 0;
   double m_rainbowFirstPixelHue2 = 180;
+  int lastLED = 0;
 
   double m_pulseFirstPixelHue = 10;
+
+  double value = 5000;
 
 
   /** Creates a new LEDs. */
@@ -110,7 +113,7 @@ public class LEDs extends SubsystemBase {
   }
 
 
-  public void dimRainbow(){
+  public void dimRainbow(double hueSpeed){
     for (var i = 0; i < m_ledBuffer.getLength(); i++){
       final int hue = ((int)(m_rainbowFirstPixelHue) + (i * 180 / m_ledBuffer.getLength())) % 180;
       if (i %2 == 0){
@@ -120,7 +123,7 @@ public class LEDs extends SubsystemBase {
         m_ledBuffer.setHSV(i, hue, 255, 255);
       }
 
-      m_rainbowFirstPixelHue += 0.05;
+      m_rainbowFirstPixelHue += hueSpeed;
 
       m_rainbowFirstPixelHue %= 180;
 
@@ -186,6 +189,62 @@ public class LEDs extends SubsystemBase {
     m_pulseFirstPixelHue += hueSpeed; //the hue changes color slower or quicker depending on the rpm of the shooter
     // Check bounds
     m_pulseFirstPixelHue %= 25;
+    }
+
+
+    public void celebrate(){
+
+      for (var i = m_ledBuffer.getLength() - 1; i > 0; i--){
+        //Sets each LED to the same color
+          final int hue = ((int)(m_rainbowFirstPixelHue) + (i * 180 / m_ledBuffer.getLength())) % 180;
+          if (i %2 == 0){
+          
+            m_ledBuffer.setHSV(i, hue, 255, 40);
+          } else {
+            m_ledBuffer.setHSV(i, hue, 255, 255);
+          }
+  
+          m_rainbowFirstPixelHue -= 0.1;
+  
+          m_rainbowFirstPixelHue %= 180;
+      }
+      m_led.setData(m_ledBuffer);
+
+
+    }
+
+
+    public void emergency(){
+
+      for (int lastColor = 0; lastColor <= 30; lastColor++){
+
+        final int hue = ((int)(m_rainbowFirstPixelHue) + (lastColor * 20 / m_ledBuffer.getLength())) % 20;
+
+        if (lastColor < 15){
+          if (lastLED %2 == 0){
+            m_ledBuffer.setRGB(lastLED, red[0], red[1], red[2]);
+          } else {
+            m_ledBuffer.setHSV(lastLED, hue, 255, 255);
+          }
+          lastLED++;
+        } else {
+          m_ledBuffer.setHSV(lastLED, hue, 0, 0);
+          lastLED++;
+        }
+
+        if (lastLED >= m_ledBuffer.getLength()){
+          lastLED = 0;
+        }
+
+        m_rainbowFirstPixelHue += 0.01;
+  
+        m_rainbowFirstPixelHue %= 20;
+        
+      }
+
+      m_led.setData(m_ledBuffer);
+
+
     }
 
   @Override

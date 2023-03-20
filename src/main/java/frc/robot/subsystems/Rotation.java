@@ -37,13 +37,13 @@ public class Rotation extends SubsystemBase {
     rotationMotorSideL1.setIdleMode(IdleMode.kBrake);
     rotationMotorSideR1.setIdleMode(IdleMode.kBrake);
 
-
+    SmartDashboard.putData(this);
   }
 
   public void rotate(double speed){
     rotationMotorSideL1.set(-speed);
     rotationMotorSideR1.set(speed);
-    if (getAverageArmAngle() <0){
+    if (getAverageArmAngle() < 0){
       resetPosition();
     }
   }
@@ -92,6 +92,10 @@ public class Rotation extends SubsystemBase {
     return averageArmAngle;
   }
 
+  public double getAverageRotationCurrent(){
+    return (rotationMotorSideL1.getOutputCurrent() + rotationMotorSideR1.getOutputCurrent())/2;
+  }
+
   public void setArmAngle(double angle){
     rotationEncoderL.setPosition(angle/3.6);
     rotationEncoderR.setPosition(angle/3.6);
@@ -106,7 +110,6 @@ public class Rotation extends SubsystemBase {
     SmartDashboard.putNumber("Left Arm Angle: ", getLeftArmAngle());
     SmartDashboard.putNumber("Right Arm Angle", getRightArmAngle());
     SmartDashboard.putNumber("Average Arm Angle: ", getAverageArmAngle());
-    SmartDashboard.putNumber("Left Arm Current: ", rotationEncoderL.getVelocity());
-    SmartDashboard.putNumber("Right Arm Current", rotationEncoderR.getVelocity());
+    //SmartDashboard.putNumber("Average Rotation Current: ", getAverageRotationCurrent());
   }
 }

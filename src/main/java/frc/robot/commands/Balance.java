@@ -34,7 +34,7 @@ public class Balance extends CommandBase {
   @Override
   public void execute() {
     double kP = 0.03;
-    double kD = -0.1;
+    double kD = -0.0;                                   ;
 
     double error = -m_gyro.getRoll();
     double errorChange = prevError - error;
@@ -42,6 +42,12 @@ public class Balance extends CommandBase {
     double output = error * kP + errorChange * kD;
 
     output = Math.copySign(Math.min(0.3, Math.abs(output)), output);
+
+    if (Math.abs(error) < 2){
+      output = 0;
+    }
+
+
     drivetrain.tankDrive(output, output);
   }
 
