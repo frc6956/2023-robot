@@ -33,8 +33,10 @@ public final class Constants {
   public static final int RotateSL1ID = 8; //8
 
 
-  public static final int openSolenoid = 1;
-  public static final int closeSolenoid = 0;
+  public static final int openSolenoidMain = 0;
+  public static final int closeSolenoidMain = 1;
+  public static final int solenoidLeft = 2;
+  public static final int solenoidRight = 3;
 
 
   public static final int OperatorPort = 0;
@@ -45,7 +47,7 @@ public final class Constants {
 
   //Subject to later change
   public static final double rotationSpeed = 0.1;
-  public static final double maxExtensionPosition = 147;
+  public static final double maxExtensionPosition = 200;
 
 
  //joystick buttons
@@ -82,7 +84,7 @@ public final class Constants {
 
   /// extension and rotation constants
 
-  public static final int RotateHigh = 28;
+  public static final int RotateHigh = 15;
   public static final int RotateMiddle = 45;
   public static final int RotateLow = 100;
   public static final int RotatePlayer = 20;

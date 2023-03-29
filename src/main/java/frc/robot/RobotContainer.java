@@ -19,10 +19,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 //import java.sql.Driver;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.hal.simulation.AnalogInDataJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -195,8 +197,8 @@ private final Command autonMoveForwardSpeed = new DriveDistance(drivetrain, 4, 0
 private final Command autonLowerArmMiddle = new RotateArm(rotation, Constants.RotateMiddle).withTimeout(1);
 
 //middle
-private final Command autonMoveChargeStationBack = new DriveDistance(drivetrain, -4, 0.5);
-private final Command autonMoveChargeStationForward = new DriveDistance(drivetrain, 2, 0.5);
+private final Command autonMoveChargeStationBack = new DriveDistance(drivetrain, -4, 0.6);
+private final Command autonMoveChargeStationForward = new DriveDistance(drivetrain, 2.1, 0.55);
 private final Command autonBalance = new Balance(drivetrain, m_gyro);
 private final Command autonHoldRobot = new HoldRobot(drivetrain);
 private final Command autonRaiseHigh = new RotateArm(rotation, Constants.RotateHigh);
@@ -209,7 +211,41 @@ private final Command resetArms = new ReturnArm(extension, rotation);
 
   //adds options to driver station
 
+
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  Command aprilTagCommand = new InstantCommand(() -> claw.closeClaw(), claw);
+  Command chargeStation = 
+    (autonExtendHigh.alongWith(new WaitCommand(1.3).andThen(autonRaiseHigh)))
+    .andThen(autonOpenClaw)
+    .andThen((resetArms).alongWith(autonMoveChargeStationBack))
+    .andThen(new WaitCommand(0.5))
+    .andThen(autonMoveChargeStationForward)
+    .andThen(autonBalance)
+    .andThen(autonHoldRobot);
+
+
+  
+  
+  Command chargeStationTest = 
+    (new ExtendArm(extension, Constants.ExtendHigh)
+    .alongWith(new WaitCommand(1.3).andThen(new RotateArm(rotation, Constants.RotateHigh))))
+    .andThen(new InstantCommand(() -> claw.openClaw(), claw))
+    .andThen(new ReturnArm(extension, rotation)
+    .alongWith((new DriveDistance(drivetrain, -3, 0.6)).andThen(new DriveDistance(drivetrain, -1, 0.45))))
+    .andThen(new WaitCommand(0))
+    .andThen(new DriveDistance(drivetrain, 2.1, 0.55))
+    .andThen(new Balance(drivetrain, m_gyro))
+    .andThen(new HoldRobot(drivetrain));
+
+
+  Command moveBack = 
+    (new ExtendArm(extension, Constants.ExtendHigh)
+    .alongWith(new WaitCommand(1.3).andThen(new RotateArm(rotation, Constants.RotateHigh))))
+    .andThen(new InstantCommand(() -> claw.openClaw(), claw))
+    .andThen(new ReturnArm(extension, rotation).alongWith(new DriveDistance(drivetrain, -4, 0.5)));
+  
+
 
   //path planning trajectories
 
@@ -218,6 +254,14 @@ private final Command resetArms = new ReturnArm(extension, rotation);
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+
+    //sent choosable auton
+    m_chooser.setDefaultOption("Default Auton", aprilTagCommand);
+    m_chooser.addOption("Charge Station Auton", chargeStation);
+    m_chooser.addOption("Drive Back Auton", moveBack);
+    m_chooser.addOption("Charge Station Test!!!", chargeStationTest);
+    SmartDashboard.putData("Auto choices", m_chooser);
 
     // start camera streaming
     CameraServer.startAutomaticCapture();
@@ -309,13 +353,23 @@ private final Command resetArms = new ReturnArm(extension, rotation);
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
+    Command autoCommand = m_chooser.getSelected();
 
-    if (vision.getAprilID() == 2 || vision.getAprilID() == 7){ // if in middle and near chargestation
-      return (autonExtendHigh.alongWith(new WaitCommand(1).andThen(autonRaiseHigh))).andThen(autonOpenClaw).andThen((resetArms).alongWith(autonMoveChargeStationBack)).andThen(new WaitCommand(0.5)).andThen(autonMoveChargeStationForward).andThen(autonBalance).andThen(autonHoldRobot);
+    if(autoCommand.equals(aprilTagCommand)) {
+      if (vision.getAprilID() == 2 || vision.getAprilID() == 7){ // if in middle and near chargestation
+
+        return chargeStation;
+      
+      } else {
+    
+        return moveBack;
+      }
     } else {
-      return (autonExtendHigh.alongWith(new WaitCommand(1).andThen(autonRaiseHigh))).andThen(autonOpenClaw).andThen(resetArms.alongWith(autonMoveBack));
+      return autoCommand;
     }
+    // An example command will be run in autonomous
+//2, 7
+
 
 
     //return autonExtend.andThen(autonRotateHigh).andThen(autonOpenClawScoreLow).andThen(autonClaw2).andThen(autonRotateReturn).andThen(autonReturnExtend);//.andThen(autonMoveBack); 

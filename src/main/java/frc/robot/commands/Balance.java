@@ -33,7 +33,7 @@ public class Balance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double kP = 0.03;
+    double kP = 0.02; //0.025 or 0.03
     double kD = -0.0;                                   ;
 
     double error = -m_gyro.getRoll();
@@ -41,7 +41,7 @@ public class Balance extends CommandBase {
     
     double output = error * kP + errorChange * kD;
 
-    output = Math.copySign(Math.min(0.3, Math.abs(output)), output);
+    output = Math.copySign(Math.min(0.35, Math.abs(output)), output);
 
     if (Math.abs(error) < 2){
       output = 0;
@@ -54,7 +54,7 @@ public class Balance extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.stopBrake();
+    
   }
 
   // Returns true when the command should end.
