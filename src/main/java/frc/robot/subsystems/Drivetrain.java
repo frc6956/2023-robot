@@ -7,13 +7,14 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -31,14 +32,14 @@ public class Drivetrain extends SubsystemBase {
   private RelativeEncoder drivetrainEncoderR1;
   private RelativeEncoder drivetrainEncoderL1;
   
-  private WPI_PigeonIMU m_gyro;
+  private AnalogGyro m_gyro;
   private Vision vision;
 
   private final DifferentialDriveOdometry m_odometry;
   private final Field2d m_field;
 
 
-  public Drivetrain(WPI_PigeonIMU m_gyro, final Vision vision) {
+  public Drivetrain(AnalogGyro m_gyro, final Vision vision) {
 
     this.vision = vision;
     
@@ -186,10 +187,10 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Drivetrain Left Encoder Distance", getDistance(drivetrainEncoderL1));
     SmartDashboard.putNumber("Drivetrain Right Encoder Distance", getDistance(drivetrainEncoderR1));
     SmartDashboard.putNumber("Drive Position", getPosition());
-    SmartDashboard.putNumber("Gyro Yaw", m_gyro.getYaw());
+    /*SmartDashboard.putNumber("Gyro Yaw", m_gyro.getYaw());
     SmartDashboard.putNumber("Gyro Pitch", m_gyro.getPitch());
     SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
-
+    */
     
   }
 }

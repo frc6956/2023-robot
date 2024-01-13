@@ -22,7 +22,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.hal.simulation.AnalogInDataJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,7 +41,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagDetection;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 
 /**
@@ -52,7 +53,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   
   private final Vision vision = new Vision();
-  private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
+  private final AnalogGyro m_gyro = new AnalogGyro(0);
   private final Drivetrain drivetrain = new Drivetrain(m_gyro, vision);
   private final Claw claw = new Claw();
   private final Extension extension = new Extension();

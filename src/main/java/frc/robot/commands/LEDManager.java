@@ -7,9 +7,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
-
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,9 +23,9 @@ public class LEDManager extends Command {
   /** Creates a new LEDManager. */
 
   private LEDs led;
-  private WPI_PigeonIMU m_gyro;
+  private AnalogGyro m_gyro;
   private Joystick operatorJoystick;
-  public LEDManager(final LEDs led, WPI_PigeonIMU m_gyro, Joystick operatorJoystick) {
+  public LEDManager(final LEDs led, AnalogGyro m_gyro, Joystick operatorJoystick) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.led = led;
     this.m_gyro = m_gyro;
@@ -54,14 +53,13 @@ public class LEDManager extends Command {
         }
         else if (DriverStation.getStickButton(Constants.OperatorPort, Constants.Purple)){
           led.setAllRGBColor(led.purple);
-         
-        } else if ((Math.abs(m_gyro.getRoll()) > 50) || (Math.abs(m_gyro.getPitch()) > 50)){
+         } /*else if ((Math.abs(m_gyro.getRoll()) > 50) || (Math.abs(m_gyro.getPitch()) > 50)){
           led.emergency();
-        }else if (DriverStation.isAutonomous()){
+        }*/else if (DriverStation.isAutonomous()){
          
-          if (DriverStation.getAlliance() == Alliance.Blue){
+          if (DriverStation.getAlliance().get() == Alliance.Blue){
             led.setAllRGBColor(led.blue);
-          } else if (DriverStation.getAlliance() == Alliance.Red){
+          } else if (DriverStation.getAlliance().get() == Alliance.Red){
             led.setAllRGBColor(led.red);
           } else {
             led.setAllRGBColor(led.green);

@@ -4,19 +4,20 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 public class TurnAngle extends Command {
   // Creates a new TurnAngle. 
 private Drivetrain mdrivetrain;
-private WPI_PigeonIMU mgyro;
+private AnalogGyro mgyro;
 private double requestedAngle;
 private double endAngle;
 private double startAngle;
 
-  public TurnAngle(final Drivetrain drivetrain, final WPI_PigeonIMU gyro, final double angle) {
+  public TurnAngle(final Drivetrain drivetrain, final AnalogGyro gyro, final double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     mdrivetrain = drivetrain;
     mgyro = gyro;

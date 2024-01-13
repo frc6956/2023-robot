@@ -4,22 +4,22 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
-
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
 public class Balance extends Command {
   Drivetrain drivetrain;
-  WPI_PigeonIMU m_gyro;
+  AnalogGyro m_gyro;
   double range = 1;
   double prevError;
   /** Creates a new Balance. */
-  public Balance(Drivetrain drivetrain, WPI_PigeonIMU m_gyro) {
+  public Balance(Drivetrain drivetrain, AnalogGyro m_gyro) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
     this.m_gyro = m_gyro;
-    prevError = m_gyro.getRoll();
+    //prevError = m_gyro.getRoll();
     
     addRequirements(drivetrain);
   }
@@ -36,7 +36,7 @@ public class Balance extends Command {
     double kP = 0.02; //0.025 or 0.03
     double kD = -0.0;                                   ;
 
-    double error = -m_gyro.getRoll();
+    /*double error = -m_gyro.getRoll();
     double errorChange = prevError - error;
     
     double output = error * kP + errorChange * kD;
@@ -45,10 +45,10 @@ public class Balance extends Command {
 
     if (Math.abs(error) < 2){
       output = 0;
-    }
+    }*/
 
 
-    drivetrain.tankDrive(output, output);
+    //drivetrain.tankDrive(output, output);
   }
 
   // Called once the command ends or is interrupted.
