@@ -6,10 +6,10 @@ package frc.robot.commands;
 
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
-public class Balance extends CommandBase {
+public class Balance extends Command {
   Drivetrain drivetrain;
   WPI_PigeonIMU m_gyro;
   double range = 1;

@@ -4,11 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LEDs;
 
-public class HoldRobot extends CommandBase {
+public class HoldRobot extends Command {
   Drivetrain drivetrain;
   double targetPosition;
   /** Creates a new BrakeRobot. */

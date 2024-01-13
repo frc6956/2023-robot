@@ -12,7 +12,7 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.LEDs;
 import frc.robot.Constants;
@@ -20,7 +20,7 @@ import frc.robot.RobotContainer;
 //Possibly need to import arm or intake
 
 
-public class LEDManager extends CommandBase {
+public class LEDManager extends Command {
   /** Creates a new LEDManager. */
 
   private LEDs led;

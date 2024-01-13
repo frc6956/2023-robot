@@ -4,11 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
-public class TurnAngle extends CommandBase {
+public class TurnAngle extends Command {
   // Creates a new TurnAngle. 
 private Drivetrain mdrivetrain;
 private WPI_PigeonIMU mgyro;

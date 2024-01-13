@@ -4,13 +4,13 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Rotation;
 
 
 
-public class ReturnArm extends CommandBase {
+public class ReturnArm extends Command {
 
   Extension extension;
   Rotation rotation;

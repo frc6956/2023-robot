@@ -1,10 +1,10 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Extension;
 
 
-public class ExtendArm extends CommandBase{
+public class ExtendArm extends Command{
     Extension extension;
     double targetPosition;
     boolean finished = false;

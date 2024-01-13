@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Rotation;
 
-public class RotateArm extends CommandBase{
+public class RotateArm extends Command{
     Rotation rotation;
     double targetAngle;
     //Subject to change
