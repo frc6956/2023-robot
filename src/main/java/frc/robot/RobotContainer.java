@@ -262,6 +262,9 @@ private final Command resetArms = new ReturnArm(extension, rotation);
 
   //Shuffleboard Data
   public ShuffleboardTab tab = Shuffleboard.getTab("Driver View");
+  ShuffleboardLayout driveModeCommands = tab.getLayout("Drive Mode", BuiltInLayouts.kList)
+    .withSize(2, 2)
+    .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
   //public Shuffleboard.selectTab("Driver View").add("Is Working?", true);
   public void shuffleBoardSend(){
     NetworkTableInstance.getDefault().close();
@@ -269,8 +272,8 @@ private final Command resetArms = new ReturnArm(extension, rotation);
     //tab.addBoolean("Please don't", () -> true);
     //tab.add("Acceleration", 10).withWidget(BuiltInWidgets.kAccelerometer);
     //After title, no comma made a sendable. Examine this further
-    tab.add("Drive Brake", brakeRobot).withWidget(BuiltInWidgets.kCommand);
-    tab.add("Drive Coast", stopBrakeRobot).withWidget(BuiltInWidgets.kCommand);
+    driveModeCommands.add("Drive Brake", brakeRobot).withWidget(BuiltInWidgets.kCommand);
+    driveModeCommands.add("Drive Coast", stopBrakeRobot).withWidget(BuiltInWidgets.kCommand);
     //ShuffleboardLayout drivetrainCommands = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 2); //.withProperties(Map.of("Label position", "HIDDEN"));
     //drivetrainCommands.add(new BrakeRobot(drivetrain));
     //tab.add("Auto Mode", m_chooser);
