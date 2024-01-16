@@ -15,6 +15,7 @@ import frc.robot.subsystems.Vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 //import java.sql.Driver;
 
@@ -24,7 +25,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import java.util.Map;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagDetection;
@@ -250,19 +256,52 @@ private final Command resetArms = new ReturnArm(extension, rotation);
 
   //path planning trajectories
 
-  
-
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
 
 
-    //sent choosable auton
-    m_chooser.setDefaultOption("Default Auton", aprilTagCommand);
+
+
+  //Shuffleboard Data
+  public ShuffleboardTab tab = Shuffleboard.getTab("Driver View");
+  //public Shuffleboard.selectTab("Driver View").add("Is Working?", true);
+  public void shuffleBoardSend(){
+    NetworkTableInstance.getDefault().close();
+    tab.addBoolean("Is Working", () -> true);//.withWidget(BuiltInWidgets.kBooleanBox);
+    //tab.addBoolean("Please don't", () -> true);
+    //tab.add("Acceleration", 10).withWidget(BuiltInWidgets.kAccelerometer);
+    //After title, no comma made a sendable. Examine this further
+    tab.add("Drive Brake", brakeRobot).withWidget(BuiltInWidgets.kCommand);
+    tab.add("Drive Coast", stopBrakeRobot).withWidget(BuiltInWidgets.kCommand);
+    //ShuffleboardLayout drivetrainCommands = tab.getLayout("Drivetrain", BuiltInLayouts.kList).withSize(2, 2); //.withProperties(Map.of("Label position", "HIDDEN"));
+    //drivetrainCommands.add(new BrakeRobot(drivetrain));
+    //tab.add("Auto Mode", m_chooser);
+    /*m_chooser.setDefaultOption("Default Auton", aprilTagCommand);
     m_chooser.addOption("Charge Station Auton", chargeStation);
     m_chooser.addOption("Drive Back Auton", moveBack);
     m_chooser.addOption("Charge Station Test!!!", chargeStationTest);
-    SmartDashboard.putData("Auto choices", m_chooser);
+
+    tab.add("Front Left Swerve", 0).withWidget(BuiltInWidgets.kGyro);
+    tab.add("Front Right Swerve", 0).withWidget(BuiltInWidgets.kGyro);
+    tab.add("Back Left Swerve", 0).withWidget(BuiltInWidgets.kGyro);
+    tab.add("Back Right Swerve", 0).withWidget(BuiltInWidgets.kGyro);
+*/
+    //acceleration dissappeared, look into command widget parameters/default values.
+  }
+  
+  
+  public RobotContainer() {
+    // Configure the trigger bindings
+    shuffleBoardSend();
+    configureBindings();
+
+    //NetworkTableInstance.getDefault().close();
+    
+
+    //sent choosable auton
+    /*m_chooser.setDefaultOption("Default Auton", aprilTagCommand);
+    m_chooser.addOption("Charge Station Auton", chargeStation);
+    m_chooser.addOption("Drive Back Auton", moveBack);
+    m_chooser.addOption("Charge Station Test!!!", chargeStationTest);
+    SmartDashboard.putData("Auto choices", m_chooser);*/
 
     // start camera streaming
     CameraServer.startAutomaticCapture();
